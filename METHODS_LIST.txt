@@ -1,0 +1,39 @@
+СПИСОК ВСІХ МЕТОДІВ ПРОГРАМИ
+==============================
+
+1. BisectionMethod: Половинного ділення
+- BisectionMethod (constructor)
+- Solve()
+
+2/3 NewtonMethod: Ньютона (дотичних і січних)
+- NewtonMethod (constructor: function, derivative) - для методу дотичних
+- NewtonMethod (constructor: function) - для методу січних
+- Solve(x, delta) - метод дотичних з похідною
+- SolveSecant(x, h, delta) - метод січних з числовою похідною
+
+4. SimpleIterationMethod: Простої ітерації
+- SimpleIterationMethod (constructor)
+- Solve()
+
+5. EulersMethod: Ейлера
+- Solve()
+- SolveToArray()
+
+6. TrapezoidalMethod: Трапецій
+- Integrate()
+
+7. SimpsonsRule: Сімпсона
+- Calculate()
+- Calculate() (overload with string)
+
+8/9. GaussForwardPass: Гаусс (прямий та зворотній)
+- ForwardElimination()
+- BackSubstitution()
+- Solve()
+
+10. MatrixAddition: Додавання Матриць
+- AddMatrices()
+
+11. BackSubstitutionMethod: Метод трикутників
+- Solve()
+- PrintSolution()
