@@ -1,11 +1,14 @@
 using System;
+using System.Text;
 
 namespace MKO_LIB
 {
     public class Lab2
     {
-        public static void Run()
+        public static string Run()
         {
+            var output = new StringBuilder();
+
             // Функція f(x) = x + ln(x) = 0
             // При a₁ = a₂ = a₃ = 1: a₁*x + a₂*ln(a₃*x) = 0 => x + ln(x) = 0
             Func<double, double> f = x => 
@@ -15,15 +18,15 @@ namespace MKO_LIB
             };
 
             // Параметри для методу бісекції
-            Console.WriteLine("=== Розв'язання рівняння: x + ln(x) = 0 ===");
-            Console.WriteLine("Де: a₁ = a₂ = a₃ = 1\n");
+            output.AppendLine("=== Розв'язання рівняння: x + ln(x) = 0 ===");
+            output.AppendLine("Де: a₁ = a₂ = a₃ = 1\n");
 
-            Console.WriteLine("=== Метод бісекції ===");
+            output.AppendLine("=== Метод бісекції ===");
             double a = 0.1;      // ліва межа
             double b = 1.0;      // права межа
             double delta = 0.0001; // точність
 
-            Console.WriteLine($"a = {a}, b = {b}, delta = {delta}");
+            output.AppendLine($"a = {a}, b = {b}, delta = {delta}");
 
             try
             {
@@ -32,25 +35,25 @@ namespace MKO_LIB
                 var result = solver.Solve(a, b, delta);
 
                 // Вивід результату
-                Console.WriteLine("\n=== Результат (Метод бісекції) ===");
-                Console.WriteLine($"Корінь x ≈ {result.Root:F10}");
-                Console.WriteLine($"f({result.Root:F10}) ≈ {result.FunctionValue:F10}");
-                Console.WriteLine($"Кількість ітерацій: {result.Iterations}");
-                Console.WriteLine($"Остаточна точність: {result.Precision:F10}");
+                output.AppendLine("\n=== Результат (Метод бісекції) ===");
+                output.AppendLine($"Корінь x ≈ {result.Root:F10}");
+                output.AppendLine($"f({result.Root:F10}) ≈ {result.FunctionValue:F10}");
+                output.AppendLine($"Кількість ітерацій: {result.Iterations}");
+                output.AppendLine($"Остаточна точність: {result.Precision:F10}");
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"Помилка: {ex.Message}");
+                output.AppendLine($"Помилка: {ex.Message}");
             }
 
             // Метод Ньютона
-            Console.WriteLine("\n=== Метод Ньютона ===");
+            output.AppendLine("\n=== Метод Ньютона ===");
 
             double h = 0.001;    // крок для числової похідної
             double x = 0.5;      // початкове наближення
             double deltaNm = 0.0001; // точність
 
-            Console.WriteLine($"x₀ = {x}, h = {h}, delta = {deltaNm}");
+            output.AppendLine($"x₀ = {x}, h = {h}, delta = {deltaNm}");
 
             try
             {
@@ -59,16 +62,18 @@ namespace MKO_LIB
                 var newtonResult = newtonSolver.SolveSecant(x, h, deltaNm);
 
                 // Вивід результату
-                Console.WriteLine("\n=== Результат (Метод Ньютона - січних) ===");
-                Console.WriteLine($"Корінь x ≈ {newtonResult.Root:F10}");
-                Console.WriteLine($"f({newtonResult.Root:F10}) ≈ {newtonResult.FunctionValue:F10}");
-                Console.WriteLine($"Кількість ітерацій: {newtonResult.Iterations}");
-                Console.WriteLine($"Остаточна точність: {newtonResult.Precision:F10}");
+                output.AppendLine("\n=== Результат (Метод Ньютона - січних) ===");
+                output.AppendLine($"Корінь x ≈ {newtonResult.Root:F10}");
+                output.AppendLine($"f({newtonResult.Root:F10}) ≈ {newtonResult.FunctionValue:F10}");
+                output.AppendLine($"Кількість ітерацій: {newtonResult.Iterations}");
+                output.AppendLine($"Остаточна точність: {newtonResult.Precision:F10}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Помилка: {ex.Message}");
+                output.AppendLine($"Помилка: {ex.Message}");
             }
+
+            return output.ToString();
         }
     }
 }
