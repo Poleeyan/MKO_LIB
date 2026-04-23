@@ -6,14 +6,14 @@ namespace MKO_LIB
     public partial class MainForm : Form
     {
         private TextBox? resultsTextBox;
-        private Button? runLab2Button;
-        private Button? runLab3Button;
+        private ComboBox? labComboBox;
+        private Button? runLabButton;
         private Button? clearButton;
 
         public MainForm()
         {
             InitializeComponent();
-            this.Text = "Equation Solvers (Lab2 & Lab3)";
+            this.Text = "Equation Solvers (Labs)";
             this.Width = 700;
             this.Height = 600;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -21,27 +21,28 @@ namespace MKO_LIB
 
         private void InitializeComponent()
         {
-            // Run Lab2 Button
-            runLab2Button = new Button();
-            runLab2Button.Text = "Run Lab2";
-            runLab2Button.Location = new System.Drawing.Point(50, 20);
-            runLab2Button.Size = new System.Drawing.Size(100, 40);
-            runLab2Button.Click += RunLab2Button_Click;
-            this.Controls.Add(runLab2Button);
+            // Lab ComboBox
+            labComboBox = new ComboBox();
+            labComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            labComboBox.Items.AddRange(new object[] { "Lab2", "Lab3", "Lab4" });
+            labComboBox.SelectedIndex = 0;
+            labComboBox.Location = new System.Drawing.Point(50, 20);
+            labComboBox.Size = new System.Drawing.Size(150, 30);
+            this.Controls.Add(labComboBox);
 
-            // Run Lab3 Button
-            runLab3Button = new Button();
-            runLab3Button.Text = "Run Lab3";
-            runLab3Button.Location = new System.Drawing.Point(160, 20);
-            runLab3Button.Size = new System.Drawing.Size(100, 40);
-            runLab3Button.Click += RunLab3Button_Click;
-            this.Controls.Add(runLab3Button);
+            // Run Lab Button
+            runLabButton = new Button();
+            runLabButton.Text = "Run Selected Lab";
+            runLabButton.Location = new System.Drawing.Point(210, 18);
+            runLabButton.Size = new System.Drawing.Size(120, 28);
+            runLabButton.Click += RunLabButton_Click;
+            this.Controls.Add(runLabButton);
 
             // Clear Button
             clearButton = new Button();
             clearButton.Text = "Clear";
-            clearButton.Location = new System.Drawing.Point(270, 20);
-            clearButton.Size = new System.Drawing.Size(100, 40);
+            clearButton.Location = new System.Drawing.Point(340, 18);
+            clearButton.Size = new System.Drawing.Size(100, 28);
             clearButton.Click += ClearButton_Click;
             this.Controls.Add(clearButton);
 
@@ -57,26 +58,29 @@ namespace MKO_LIB
             this.Controls.Add(resultsTextBox);
         }
 
-        private void RunLab2Button_Click(object? sender, EventArgs e)
+        private void RunLabButton_Click(object? sender, EventArgs e)
         {
             try
             {
-                if (resultsTextBox != null)
-                    resultsTextBox.Text = Lab2.Run();
-            }
-            catch (Exception ex)
-            {
-                if (resultsTextBox != null)
-                    resultsTextBox.Text = $"Error: {ex.Message}\n\n{ex.StackTrace}";
-            }
-        }
-
-        private void RunLab3Button_Click(object? sender, EventArgs e)
-        {
-            try
-            {
-                if (resultsTextBox != null)
-                    resultsTextBox.Text = Lab3.Run();
+                if (resultsTextBox == null || labComboBox == null || labComboBox.SelectedItem == null)
+                    return;
+                
+                string selectedLab = labComboBox.SelectedItem.ToString() ?? "";
+                switch (selectedLab)
+                {
+                    case "Lab2":
+                        resultsTextBox.Text = Lab2.Run();
+                        break;
+                    case "Lab3":
+                        resultsTextBox.Text = Lab3.Run();
+                        break;
+                    case "Lab4":
+                        resultsTextBox.Text = Lab4.Run();
+                        break;
+                    default:
+                        resultsTextBox.Text = "Lab not implemented or selected properly.";
+                        break;
+                }
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace MKO_LIB
 {
@@ -8,51 +8,37 @@ namespace MKO_LIB
     /// </summary>
     public class SimpsonsRule
     {
-        /// <summary>
-        /// Обчислює наближене значення визначеного інтеграла функції f(x) на відрізку [a, b]
-        /// за методом Сімпсона з кроком h
-        /// </summary>
-        /// <param name="f">Функція, яку інтегруємо (делегат Func)</param>
-        /// <param name="a">Нижня межа інтегрування</param>
-        /// <param name="b">Верхня межа інтегрування</param>
-        /// <param name="h">Крок розбиття (дельта x)</param>
-        /// <returns>Наближене значення інтеграла</returns>
-        public static double Calculate(Func<double, double> f, double a, double b, double h)
+        public static double Calculate(Func<double, double> f, double a, double b, int n)
         {
-            // Перевірка коректності вхідних даних
             if (f == null)
                 throw new ArgumentNullException(nameof(f), "Функція не може бути null");
             if (a >= b)
                 throw new ArgumentException("Нижня межа має бути менша за верхню");
-            if (h <= 0)
-                throw new ArgumentException("Крок має бути додатним");
+            if (n <= 0)
+                throw new ArgumentException("Кількість інтервалів має бути більшою за нуль");
 
-            double I = 0; // Накопичувач для суми
-
-            // Ітерація по всім підвідрізкам [x, x+h] на проміжку [a, b]
-            for (double x = a; x < b; x += h)
+            if (n % 2 != 0) 
             {
-                double xPlusH = x + h;
-                
-                // Застосування формули Сімпсона для одного підвідрізка:
-                // ∫[x, x+h] f(t)dt ≈ (h/6) * (f(x) + 4*f(x+h/2) + f(x+h))
-                I += f(x) + 4 * f(x + h / 2) + f(xPlusH);
+                n += 1; 
             }
 
-            // Множення на коефіцієнт h/6
-            I *= h / 6;
+            double h = (b - a) / n;
+            double I = f(a) + f(b);
+
+            for (int i = 1; i < n; i++)
+            {
+                double x = a + i * h;
+                I += (i % 2 == 0) ? 2 * f(x) : 4 * f(x);
+            }
+
+            I *= h / 3.0;
 
             return I;
         }
 
-        /// <summary>
-        /// Перегружена версія методу з явним заданням функції як строки (полегшує версія для тестування)
-        /// </summary>
-        public static double Calculate(string functionExpression, double a, double b, double h)
+        public static double Calculate(string functionExpression, double a, double b, int n)
         {
-            // Наслідок - потребує використання бібліотеки для парсингу математичних виразів
-            // або аналітичного виразу функції
-            throw new NotImplementedException("Використовуйте перегрузену версію з Func<double, double>");
+            throw new NotImplementedException("Використовуйте перегружену версію з Func<double, double>");
         }
     }
 }
