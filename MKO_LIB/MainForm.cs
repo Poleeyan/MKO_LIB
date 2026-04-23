@@ -71,6 +71,9 @@ namespace MKO_LIB
                     case "Lab1":
                         resultsTextBox.Text = Lab1.Run();
                         break;
+                   case "Lab2":
+                        resultsTextBox.Text = Lab2.Run();
+                        break;
                     case "Lab3":
                         resultsTextBox.Text = Lab3.Run();
                         break;
