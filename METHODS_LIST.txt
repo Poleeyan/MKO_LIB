@@ -15,9 +15,12 @@
 - SimpleIterationMethod (constructor)
 - Solve()
 
-5. EulersMethod: Ейлера
+5. EulersMethod: Ейлера (прямий метод)
 - Solve()
 - SolveToArray()
+
+5.1. RungeKuttaMethod: Рунге-Кутти (4-го порядку)
+- Solve()
 
 6. TrapezoidalMethod: Трапецій
 - Integrate()
