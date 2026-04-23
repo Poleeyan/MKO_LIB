@@ -64,34 +64,24 @@ namespace MKO_LIB
             {
                 if (resultsTextBox == null || labComboBox == null || labComboBox.SelectedItem == null)
                     return;
-                
-                string selectedLab = labComboBox.SelectedItem.ToString() ?? "";
-                switch (selectedLab)
+                Dictionary<string, Func<string>> labMethods = new Dictionary<string, Func<string>>()
                 {
-                    case "Lab1":
-                        resultsTextBox.Text = Lab1.Run();
-                        break;
-                   case "Lab2":
-                        resultsTextBox.Text = Lab2.Run();
-                        break;
-                    case "Lab3":
-                        resultsTextBox.Text = Lab3.Run();
-                        break;
-                    case "Lab4":
-                        resultsTextBox.Text = Lab4.Run();
-                        break;
-                    case "Lab5":
-                        resultsTextBox.Text = Lab5.Run();
-                        break;
-                    case "Lab6":
-                        resultsTextBox.Text = Lab6.Run();
-                        break;
-                    case "Coursework":
-                        resultsTextBox.Text = Coursework.Run();
-                        break;
-                    default:
-                        resultsTextBox.Text = "Lab not implemented or selected properly.";
-                        break;
+                    { "Lab1", Lab1.Run },
+                    { "Lab2", Lab2.Run },
+                    { "Lab3", Lab3.Run },
+                    { "Lab4", Lab4.Run },
+                    { "Lab5", Lab5.Run },
+                    { "Lab6", Lab6.Run },
+                    { "Coursework", Coursework.Run }
+                };
+                string selectedLab = labComboBox.SelectedItem.ToString() ?? "";
+                if (labMethods.ContainsKey(selectedLab))
+                {
+                    resultsTextBox.Text = labMethods[selectedLab]();
+                }
+                else
+                {
+                    resultsTextBox.Text = "Lab not implemented or selected properly.";
                 }
             }
             catch (Exception ex)
