@@ -82,17 +82,5 @@ namespace MKO_LIB
             }
             return det;
         }
-
-        /// <summary>
-        /// Виводить вектор рішення
-        /// </summary>
-        public static void DisplaySolution(double[] x)
-        {
-            Console.WriteLine("Рішення системи:");
-            for (int i = 0; i < x.Length; i++)
-            {
-                Console.WriteLine($"x[{i + 1}] = {x[i]:F6}");
-            }
-        }
     }
 }

@@ -39,4 +39,3 @@
 
 11. BackSubstitutionMethod: Метод трикутників
 - Solve()
-- PrintSolution()

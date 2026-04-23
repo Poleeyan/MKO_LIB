@@ -36,8 +36,6 @@ public class BisectionMethod
                 b = c;
             }
 
-            Console.WriteLine($"Ітерація {iterations}: a={a:F6}, b={b:F6}, c={c:F6}, |b-a|={Math.Abs(b - a):F6}");
-
             // Крок 4: |b-a| >= delta? якщо так: повернення до 2, якщо ні: вивід c
         } while (Math.Abs(b - a) >= delta);
 

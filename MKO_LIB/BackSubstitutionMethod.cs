@@ -53,17 +53,4 @@ public class BackSubstitutionMethod
         // Повертаємо вектор розв'язків
         return x;
     }
-    
-    /// <summary>
-    /// Виводить результати розв'язку на консоль
-    /// </summary>
-    /// <param name="x">Вектор розв'язків</param>
-    public static void PrintSolution(double[] x)
-    {
-        Console.WriteLine("\nРозв'язок системи:");
-        for (int i = 0; i < x.Length; i++)
-        {
-            Console.WriteLine($"x[{i}] = {x[i]:F6}");
-        }
-    }
 }
