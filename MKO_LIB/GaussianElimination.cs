@@ -27,6 +27,30 @@ namespace MKO_LIB
             // Зовнішній цикл - для кожного стовпця (точка 1: i=0, i<n-1, i++)
             for (int i = 0; i < n - 1; i++)
             {
+                // Пошук максимального елемента в стовпці для часткового вибору ведучого елемента (pivoting)
+                int maxRow = i;
+                for (int m = i + 1; m < n; m++)
+                {
+                    if (Math.Abs(a[m, i]) > Math.Abs(a[maxRow, i]))
+                    {
+                        maxRow = m;
+                    }
+                }
+
+                // Перестановка рядків, якщо максимальний елемент не на поточній діагоналі
+                if (maxRow != i)
+                {
+                    for (int k = i; k < n; k++)
+                    {
+                        double temp = a[i, k];
+                        a[i, k] = a[maxRow, k];
+                        a[maxRow, k] = temp;
+                    }
+                    double tempB = b[i];
+                    b[i] = b[maxRow];
+                    b[maxRow] = tempB;
+                }
+
                 // Перевірка діагонального елемента на нульовість
                 if (Math.Abs(a[i, i]) < 1e-12)
                 {
