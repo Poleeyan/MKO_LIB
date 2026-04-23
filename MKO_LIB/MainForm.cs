@@ -24,7 +24,7 @@ namespace MKO_LIB
             // Lab ComboBox
             labComboBox = new ComboBox();
             labComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            labComboBox.Items.AddRange(new object[] { "Lab2", "Lab3", "Lab4", "Lab5", "Lab6", "Coursework" });
+            labComboBox.Items.AddRange(new object[] { "Lab1", "Lab2", "Lab3", "Lab4", "Lab5", "Lab6", "Coursework" });
             labComboBox.SelectedIndex = 0;
             labComboBox.Location = new System.Drawing.Point(50, 20);
             labComboBox.Size = new System.Drawing.Size(150, 30);
@@ -68,8 +68,8 @@ namespace MKO_LIB
                 string selectedLab = labComboBox.SelectedItem.ToString() ?? "";
                 switch (selectedLab)
                 {
-                    case "Lab2":
-                        resultsTextBox.Text = Lab2.Run();
+                    case "Lab1":
+                        resultsTextBox.Text = Lab1.Run();
                         break;
                     case "Lab3":
                         resultsTextBox.Text = Lab3.Run();
