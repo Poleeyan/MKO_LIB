@@ -29,6 +29,9 @@
 - Calculate()
 - Calculate() (overload with string)
 
+7.1. CubicSplineInterpolationMethod: Кубічними сплайнами
+- Calculate()
+
 8/9. GaussForwardPass: Гаусс (прямий та зворотній)
 - ForwardElimination()
 - BackSubstitution()
@@ -38,4 +41,31 @@
 - AddMatrices()
 
 11. BackSubstitutionMethod: Метод трикутників
+- Solve()
+
+12. ChordMethod: Метод хорд
+- Solve()
+
+13. CramersRule: Метод Крамера
+- Solve()
+
+14. EulerWithRungeMethod: Метод Ейлера (з перерахунком)
+- Solve()
+
+15. FiniteDifferenceMethod: Метод скінченних різниць
+- Solve()
+
+16. LagrangeInterpolationMethod: Поліноми Лагранжа
+- Calculate()
+
+17. LeastSquaresMethod: Метод найменших квадратів
+- Calculate()
+
+18. MatrixMultiplication: Множення матриць
+- Multiply()
+
+19. NewtonInterpolationMethod: Поліноми Ньютона
+- Calculate()
+
+20. NewtonSystemMethod: Метод Ньютона для систем рівнянь
 - Solve()
