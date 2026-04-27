@@ -2,10 +2,6 @@
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Simpson's Rule (Simpson's 1/3 Rule) - метод чисельного інтегрування
-    /// Використовується для наближеного обчислення визначеного інтеграла
-    /// </summary>
     public class SimpsonsRule
     {
         public static double Calculate(Func<double, double> f, double a, double b, int n)

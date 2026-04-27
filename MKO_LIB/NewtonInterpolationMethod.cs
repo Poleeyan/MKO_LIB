@@ -2,20 +2,8 @@ using System;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Метод інтерполяції за першою інтерполяційною формулою Ньютона.
-    /// </summary>
     public class NewtonInterpolationMethod
     {
-        /// <summary>
-        /// Обчислює значення полінома за першою інтерполяційною формулою Ньютона 
-        /// для заданого значення x, згідно з наданою блок-схемою.
-        /// </summary>
-        /// <param name="X">Масив вузлів інтерполяції</param>
-        /// <param name="Y">Масив значень функції у вузлах</param>
-        /// <param name="h">Крок інтерполяції</param>
-        /// <param name="x">Точка, в якій потрібно знайти наближене значення</param>
-        /// <returns>Приблизне значення функції в точці x</returns>
         public static double CalculateFirstFormula(double[] X, double[] Y, double h, double x)
         {
             if (X.Length != Y.Length)

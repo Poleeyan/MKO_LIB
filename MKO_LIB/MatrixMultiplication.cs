@@ -1,16 +1,7 @@
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Клас для виконання операції множення матриць на основі блок-схеми
-    /// </summary>
     public class MatrixMultiplication
     {
-        /// <summary>
-        /// Множить матрицю A (k×m) на матрицю B (m×l)
-        /// </summary>
-        /// <param name="A">Матриця A розміру k×m</param>
-        /// <param name="B">Матриця B розміру m×l</param>
-        /// <returns>Результуюча матриця C розміру k×l</returns>
         public static double[,] MultiplyMatrices(double[,] A, double[,] B)
         {
             // Крок 1. Отримуємо розміри k, m, l з вхідних матриць

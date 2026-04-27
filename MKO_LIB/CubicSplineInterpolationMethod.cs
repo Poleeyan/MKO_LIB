@@ -2,19 +2,8 @@ using System;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Метод інтерполяції кубічними сплайнами (поліномами третього порядку).
-    /// </summary>
     public class CubicSplineInterpolationMethod
     {
-        /// <summary>
-        /// Обчислює значення функції в точці x за допомогою кубічного сплайну, 
-        /// реалізовано згідно з наданою блок-схемою.
-        /// </summary>
-        /// <param name="X">Масив вузлів інтерполяції</param>
-        /// <param name="Y">Масив значень функції у вузлах</param>
-        /// <param name="targetX">Точка, в якій потрібно знайти наближене значення</param>
-        /// <returns>Приблизне значення функції в точці targetX</returns>
         public static double Calculate(double[] X, double[] Y, double targetX)
         {
             // Крок 1: Початок

@@ -4,13 +4,6 @@ namespace MKO_LIB
 {
     public class FiniteDifferenceMethod
     {
-        /// <summary>
-        /// Рекурсивний алгоритм визначення скінченних (правих) різниць.
-        /// </summary>
-        /// <param name="y">Масив значень функції</param>
-        /// <param name="p">Порядок різниці</param>
-        /// <param name="i">Індекс елемента</param>
-        /// <returns>Значення скінченної різниці порядку p для індексу i</returns>
         public static double Right(double[] y, int p, int i)
         {
             // Перевірка, щоб уникнути виходу за межі масиву

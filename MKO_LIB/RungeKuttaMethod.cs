@@ -3,21 +3,8 @@ using System.Collections.Generic;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Метод Рунге-Кутти (4-го порядку) для розв'язання задачі Коші
-    /// dy/dx = f(x, y), з початковою умовою y(a) = y0
-    /// </summary>
     public class RungeKuttaMethod
     {
-        /// <summary>
-        /// Розв'язує диференціальне рівняння класичним методом Рунге-Кутти 4-го порядку.
-        /// </summary>
-        /// <param name="f">Функція f(x, y) - права частина диференціального рівняння</param>
-        /// <param name="a">Перша межа інтегрування (початкова точка x0)</param>
-        /// <param name="b">Друга межа інтегрування (кінцева точка)</param>
-        /// <param name="h">Крок інтегрування</param>
-        /// <param name="y0">Початкове значення y(a)</param>
-        /// <returns>Список пар (x, y) - наближеного розв'язку у вузлах сітки</returns>
         public List<(double x, double y)> Solve(Func<double, double, double> f, double a, double b, double h, double y0)
         {
             List<(double x, double y)> solution = new List<(double x, double y)>();

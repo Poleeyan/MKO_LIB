@@ -3,34 +3,15 @@ using System.Linq;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Клас для розв'язання систем нелінійних рівнянь методом Ньютона.
-    /// Відповідно до блок-схеми:
-    /// X^(k+1) = X^(k) - [W(X^(k))]^-1 * F(X^(k))
-    /// </summary>
     public class NewtonSystemMethod
     {
         private readonly Func<double[], double[]> _systemFunctions;
         private readonly Func<double[], double[,]> _jacobianMatrix;
-
-        /// <summary>
-        /// Конструктор для методу Ньютона (для систем нелінійних рівнянь).
-        /// </summary>
-        /// <param name="systemFunctions">Функція, що повертає вектор значень системи F(X)</param>
-        /// <param name="jacobianMatrix">Функція, що повертає матрицю Якобі W(X)</param>
         public NewtonSystemMethod(Func<double[], double[]> systemFunctions, Func<double[], double[,]> jacobianMatrix)
         {
             _systemFunctions = systemFunctions;
             _jacobianMatrix = jacobianMatrix;
         }
-
-        /// <summary>
-        /// Розв'язує систему нелінійних рівнянь методом Ньютона.
-        /// </summary>
-        /// <param name="x0">Початкове наближення X^(0)</param>
-        /// <param name="epsilon">Похибка S</param>
-        /// <param name="maxIterations">Максимальна кількість ітерацій Max</param>
-        /// <returns>Вектор розв'язку X та кількість виконаних ітерацій</returns>
         public (double[] Root, int Iterations) Solve(double[] x0, double epsilon, int maxIterations = 100)
         {
             int n = x0.Length;

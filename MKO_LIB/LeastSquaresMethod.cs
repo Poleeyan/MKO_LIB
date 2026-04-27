@@ -2,24 +2,10 @@ using System;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Результати апроксимації методом найменших квадратів
-    /// </summary>
     public class LeastSquaresResult
     {
-        /// <summary>
-        /// Коефіцієнти апроксимуючого поліному: c0 + c1*x + c2*x^2 + ... + cm*x^m
-        /// </summary>
         public double[] Coefficients { get; set; } = Array.Empty<double>();
-
-        /// <summary>
-        /// Залишкова середньоквадратична похибка
-        /// </summary>
         public double RmsError { get; set; }
-
-        /// <summary>
-        /// Обчислює значення апроксимуючої функції в точці x
-        /// </summary>
         public double GetValue(double x)
         {
             double result = 0;
@@ -30,19 +16,8 @@ namespace MKO_LIB
             return result;
         }
     }
-
-    /// <summary>
-    /// Метод найменших квадратів для апроксимації функцій за заданою блок-схемою.
-    /// </summary>
     public class LeastSquaresMethod
     {
-        /// <summary>
-        /// Виконує апроксимацію набору точок поліномом заданого степеня.
-        /// </summary>
-        /// <param name="x">Вектор значень X</param>
-        /// <param name="y">Вектор значень Y</param>
-        /// <param name="degree">Степінь апроксимуючого полінома</param>
-        /// <returns>Результат з коефіцієнтами та похибкою</returns>
         public static LeastSquaresResult Approximate(double[] x, double[] y, int degree)
         {
             int n = x.Length;

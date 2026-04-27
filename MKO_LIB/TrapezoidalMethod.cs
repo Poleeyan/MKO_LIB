@@ -2,19 +2,8 @@ using System;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Метод трапецій для чисельного інтегрування функції на інтервалі [a, b]
-    /// </summary>
     public class TrapezoidalMethod
     {
-        /// <summary>
-        /// Обчислює визначений інтеграл функції методом трапецій
-        /// </summary>
-        /// <param name="f">Делегат функції f(x), яку необхідно інтегрувати</param>
-        /// <param name="a">Нижня межа інтегрування</param>
-        /// <param name="b">Верхня межа інтегрування</param>
-        /// <param name="h">Крок розбиття (довжина кожної елементарної трапеції)</param>
-        /// <returns>Наближене значення визначеного інтеграла</returns>
         public static double Integrate(Func<double, double> f, double a, double b, double h)
         {
             // 3. Ініціалізація суми з граничними значеннями функції

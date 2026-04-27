@@ -2,26 +2,8 @@ using System;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Функція прямого ходу Гаусівської елімінації за заданою блок-схемою
-    /// </summary>
     public class GaussForwardPass
     {
-        /// <summary>
-        /// Прямий хід методу Гаусса - приведення матриці до верхньотрикутної форми
-        /// </summary>
-        /// <param name="a">Матриця коефіцієнтів системи (n x n)</param>
-        /// <param name="b">Вектор вільних членів (n елементів)</param>
-        /// <param name="n">Розмір матриці</param>
-        /// <remarks>
-        /// Алгоритм на основі блок-схеми (з виправленнями помилок):
-        /// 1. Зовнішній цикл: для кожного стовпця i від 0 до n-2
-        /// 2. Внутрішній цикл: для кожного рядка j від i+1 до n-1
-        /// 3. Обчислити множник: d = a[j][i] / a[i][i]
-        /// 4. Цикл по стовпцях: для кожного елемента k від 0 до n-1
-        /// 5. Віднести від j-го рядка i-й рядок домножений на d: a[j][k] = a[j][k] - d*a[i][k]
-        /// 6. Вико-наєм аналогічно для вектора b: b[j] = b[j] - d*b[i]
-        /// </remarks>
         public static void ForwardElimination(double[,] a, double[] b, int n)
         {
             // Зовнішній цикл - для кожного стовпця (точка 1: i=0, i<n-1, i++)
@@ -75,14 +57,6 @@ namespace MKO_LIB
                 }
             }
         }
-
-        /// <summary>
-        /// Зворотне підставлення для отримання розв'язку з верхньотрикутної матриці
-        /// </summary>
-        /// <param name="a">Верхньотрикутна матриця (результат прямого ходу)</param>
-        /// <param name="b">Модифікований вектор вільних членів (результат прямого ходу)</param>
-        /// <param name="n">Розмір системи</param>
-        /// <returns>Вектор розв'язків системи</returns>
         public static double[] BackSubstitution(double[,] a, double[] b, int n)
         {
             double[] x = new double[n];
@@ -105,13 +79,6 @@ namespace MKO_LIB
 
             return x;
         }
-
-        /// <summary>
-        /// Розв'язує систему лінійних рівнянь методом Гауса повністю
-        /// </summary>
-        /// <param name="a">Матриця коефіцієнтів системи</param>
-        /// <param name="b">Вектор вільних членів</param>
-        /// <returns>Вектор розв'язків</returns>
         public static double[] Solve(double[,] a, double[] b)
         {
             int n = b.Length;

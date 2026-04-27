@@ -57,10 +57,6 @@ public class ChordMethod
             Iterations = iterations
         };
     }
-
-    /// <summary>
-    /// Альтернативний метод хорд (метод з фіксованим кінцем 'a').
-    /// </summary>
     public ChordResult SolveAlternative(double a, double b, double epsilon)
     {
         // Крок 2: x0 = b (припускаємо, що h у вашій блок-схемі означає другу межу відрізка b)

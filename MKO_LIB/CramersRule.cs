@@ -4,9 +4,6 @@ namespace MKO_LIB
 {
     public class CramersRule
     {
-        /// <summary>
-        /// Розв'язує систему лінійних рівнянь за правилом Крамера для матриці N x N
-        /// </summary>
         public static double[] Solve(double[,] A, double[] b, out double detMain, out double[] detI)
         {
             int n = b.Length;
@@ -47,10 +44,6 @@ namespace MKO_LIB
         {
             return Solve(A, b, out _, out _);
         }
-
-        /// <summary>
-        /// Універсальне обчислення визначника квадратної матриці розміром N x N (розклад за першим рядком)
-        /// </summary>
         public static double CalculateDeterminant(double[,] matrix)
         {
             int n = matrix.GetLength(0);

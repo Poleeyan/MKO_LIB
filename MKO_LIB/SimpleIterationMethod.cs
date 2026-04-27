@@ -3,9 +3,6 @@ using System.Text;
 
 namespace MKO_LIB
 {
-    /// <summary>
-    /// Метод простої ітерації (метод Якобі) для розв'язання системи N рівнянь з N невідомими
-    /// </summary>
     public class SimpleIterationMethod
     {
         public static SimpleIterationNResult Solve(double[,] A, double[] b, double delta = 0.0001, int maxIterations = 1000)
