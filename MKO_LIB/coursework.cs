@@ -6,7 +6,7 @@ namespace MKO_LIB
 {
     public class Coursework
     {
-        public static string Run()
+        public static string Run(double a = 1.0, double b = 2.0, double epsilon = 0.01, double x0 = 2.0)
         {
             var output = new StringBuilder();
             
@@ -16,11 +16,12 @@ namespace MKO_LIB
             Func<double, double> f = x => 0.5 * Math.Pow(x, 5) - 0.005 * x - 1.0;
             Func<double, double> df = x => 2.5 * Math.Pow(x, 4) - 0.005;
 
-            double a = 1.0;
-            double b = 2.0;
-            double epsilon = 0.01; // Задана похибка 0.01, вказана у завданні
+            // These were previously hardcoded:
+            // double a = 1.0;
+            // double b = 2.0;
+            // double epsilon = 0.01;
 
-            output.AppendLine($"\nІнтервал для дійсного кореня f(1) = {f(a)}, f(2) = {f(b)} : [{a}, {b}]");
+            output.AppendLine($"\nІнтервал для дійсного кореня f({a}) = {f(a):F5}, f({b}) = {f(b):F5} : [{a}, {b}]");
             output.AppendLine($"Задана похибка: {epsilon}");
 
             // 1. Метод половинного ділення
@@ -55,7 +56,7 @@ namespace MKO_LIB
             output.AppendLine("\n--- Метод дотичних (Ньютона) ---");
             try
             {
-                double x0 = 2.0; // Початкове наближення
+                // Початкове наближення передається аргументом
                 var newtonMethod = new NewtonMethod(f, df);
                 var newtonResult = newtonMethod.Solve(x0, epsilon);
                 output.AppendLine($"Початкове наближення x0: {x0}");
