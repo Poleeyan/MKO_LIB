@@ -8,8 +8,9 @@ namespace MKO_LIB
     {
         private TextBox? resultsTextBox;
         private ComboBox? labComboBox;
-        private Button? modeLabButton;
-        private Button? modeCourseworkButton;
+        private TabControl? modeTabControl;
+        private TabPage? labTabPage;
+        private TabPage? courseworkTabPage;
         private Button? runLabButton;
         private Button? clearButton;
         
@@ -28,7 +29,7 @@ namespace MKO_LIB
         public MainForm()
         {
             InitializeComponent();
-            this.Text = "Equation Solvers (Labs)";
+            this.Text = "Equation Solvers (Labs & Coursework)";
             this.Width = 700;
             this.Height = 600;
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -36,78 +37,75 @@ namespace MKO_LIB
 
         private void InitializeComponent()
         {
-            // Mode Lab Button
-            modeLabButton = new Button();
-            modeLabButton.Text = "Run Lab";
-            modeLabButton.Location = new System.Drawing.Point(50, 20);
-            modeLabButton.Size = new System.Drawing.Size(120, 30);
-            modeLabButton.Click += ModeLabButton_Click;
-            this.Controls.Add(modeLabButton);
+            // TabControl
+            modeTabControl = new TabControl();
+            modeTabControl.Location = new System.Drawing.Point(50, 20);
+            modeTabControl.Size = new System.Drawing.Size(500, 70);
+            modeTabControl.SelectedIndexChanged += ModeTabControl_SelectedIndexChanged;
 
-            // Mode Coursework Button
-            modeCourseworkButton = new Button();
-            modeCourseworkButton.Text = "Run Coursework";
-            modeCourseworkButton.Location = new System.Drawing.Point(180, 20);
-            modeCourseworkButton.Size = new System.Drawing.Size(130, 30);
-            modeCourseworkButton.Click += ModeCourseworkButton_Click;
-            this.Controls.Add(modeCourseworkButton);
+            // Lab TabPage
+            labTabPage = new TabPage("Labs");
+            
+            // Coursework TabPage
+            courseworkTabPage = new TabPage("Coursework");
+
+            modeTabControl.TabPages.Add(labTabPage);
+            modeTabControl.TabPages.Add(courseworkTabPage);
+            this.Controls.Add(modeTabControl);
 
             // Clear Button
             clearButton = new Button();
             clearButton.Text = "Clear";
-            clearButton.Location = new System.Drawing.Point(320, 20);
-            clearButton.Size = new System.Drawing.Size(100, 30);
+            clearButton.Location = new System.Drawing.Point(560, 40);
+            clearButton.Size = new System.Drawing.Size(90, 30);
             clearButton.Click += ClearButton_Click;
             this.Controls.Add(clearButton);
 
             // Run Lab Button
             runLabButton = new Button();
-            runLabButton.Text = "Run";
-            runLabButton.Location = new System.Drawing.Point(210, 58);
-            runLabButton.Size = new System.Drawing.Size(80, 26);
+            runLabButton.Text = "Run Lab";
+            runLabButton.Location = new System.Drawing.Point(170, 10);
+            runLabButton.Size = new System.Drawing.Size(90, 26);
             runLabButton.Click += RunLabButton_Click;
-            this.Controls.Add(runLabButton);
+            labTabPage.Controls.Add(runLabButton);
 
             // Lab ComboBox
             labComboBox = new ComboBox();
             labComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             labComboBox.Items.AddRange(new object[] { "Lab1", "Lab2", "Lab3", "Lab4", "Lab5", "Lab6", "Lab7", "Lab8" });
-            labComboBox.Location = new System.Drawing.Point(50, 60);
+            labComboBox.Location = new System.Drawing.Point(10, 12);
             labComboBox.Size = new System.Drawing.Size(150, 30);
-            this.Controls.Add(labComboBox);
+            labTabPage.Controls.Add(labComboBox);
             labComboBox.SelectedIndex = 0;
 
             // Coursework Labels & Inputs
-            aLabel = new Label() { Text = "a=", Location = new System.Drawing.Point(50, 63), Size = new System.Drawing.Size(30, 20) };
-            aInput = new TextBox() { Text = "1.0", Location = new System.Drawing.Point(80, 60), Size = new System.Drawing.Size(40, 20) };
+            aLabel = new Label() { Text = "a=", Location = new System.Drawing.Point(10, 13), Size = new System.Drawing.Size(30, 20) };
+            aInput = new TextBox() { Text = "1.0", Location = new System.Drawing.Point(40, 10), Size = new System.Drawing.Size(40, 20) };
             
-            bLabel = new Label() { Text = "b=", Location = new System.Drawing.Point(130, 63), Size = new System.Drawing.Size(30, 20) };
-            bInput = new TextBox() { Text = "2.0", Location = new System.Drawing.Point(160, 60), Size = new System.Drawing.Size(40, 20) };
+            bLabel = new Label() { Text = "b=", Location = new System.Drawing.Point(90, 13), Size = new System.Drawing.Size(30, 20) };
+            bInput = new TextBox() { Text = "2.0", Location = new System.Drawing.Point(120, 10), Size = new System.Drawing.Size(40, 20) };
             
-            epsLabel = new Label() { Text = "eps=", Location = new System.Drawing.Point(210, 63), Size = new System.Drawing.Size(40, 20) };
-            epsInput = new TextBox() { Text = "0.01", Location = new System.Drawing.Point(250, 60), Size = new System.Drawing.Size(50, 20) };
+            epsLabel = new Label() { Text = "eps=", Location = new System.Drawing.Point(170, 13), Size = new System.Drawing.Size(40, 20) };
+            epsInput = new TextBox() { Text = "0.01", Location = new System.Drawing.Point(210, 10), Size = new System.Drawing.Size(50, 20) };
             
-            x0Label = new Label() { Text = "x0=", Location = new System.Drawing.Point(310, 63), Size = new System.Drawing.Size(30, 20) };
-            x0Input = new TextBox() { Text = "2.0", Location = new System.Drawing.Point(340, 60), Size = new System.Drawing.Size(40, 20) };
+            x0Label = new Label() { Text = "x0=", Location = new System.Drawing.Point(270, 13), Size = new System.Drawing.Size(30, 20) };
+            x0Input = new TextBox() { Text = "2.0", Location = new System.Drawing.Point(300, 10), Size = new System.Drawing.Size(40, 20) };
 
             getButton = new Button();
             getButton.Text = "Get";
-            getButton.Location = new System.Drawing.Point(400, 58);
+            getButton.Location = new System.Drawing.Point(360, 8);
             getButton.Size = new System.Drawing.Size(80, 26);
             getButton.Click += GetButton_Click;
 
-            this.Controls.Add(aLabel);
-            this.Controls.Add(aInput);
-            this.Controls.Add(bLabel);
-            this.Controls.Add(bInput);
-            this.Controls.Add(epsLabel);
-            this.Controls.Add(epsInput);
-            this.Controls.Add(x0Label);
-            this.Controls.Add(x0Input);
-            this.Controls.Add(getButton);
-
-            // Initially hide coursework controls
-            ToggleCourseworkControls(false);
+            courseworkTabPage.Controls.Add(aLabel);
+            courseworkTabPage.Controls.Add(aInput);
+            courseworkTabPage.Controls.Add(bLabel);
+            courseworkTabPage.Controls.Add(bInput);
+            courseworkTabPage.Controls.Add(epsLabel);
+            courseworkTabPage.Controls.Add(epsInput);
+            courseworkTabPage.Controls.Add(x0Label);
+            courseworkTabPage.Controls.Add(x0Input);
+            courseworkTabPage.Controls.Add(getButton);
 
             // Results TextBox
             resultsTextBox = new TextBox();
@@ -121,35 +119,9 @@ namespace MKO_LIB
             this.Controls.Add(resultsTextBox);
         }
 
-        private void ToggleCourseworkControls(bool show)
+        private void ModeTabControl_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (labComboBox != null) labComboBox.Visible = !show;
-            if (runLabButton != null) runLabButton.Visible = !show;
-            if (aLabel != null) aLabel.Visible = show;
-            if (aInput != null) aInput.Visible = show;
-            if (bLabel != null) bLabel.Visible = show;
-            if (bInput != null) bInput.Visible = show;
-            if (epsLabel != null) epsLabel.Visible = show;
-            if (epsInput != null) epsInput.Visible = show;
-            if (x0Label != null) x0Label.Visible = show;
-            if (x0Input != null) x0Input.Visible = show;
-            if (getButton != null) getButton.Visible = show;
-        }
-
-        private void ModeLabButton_Click(object? sender, EventArgs e)
-        {
-            ToggleCourseworkControls(false);
             if (resultsTextBox != null) resultsTextBox.Text = string.Empty;
-            if (modeLabButton != null) modeLabButton.FlatStyle = FlatStyle.Flat;
-            if (modeCourseworkButton != null) modeCourseworkButton.FlatStyle = FlatStyle.Standard;
-        }
-
-        private void ModeCourseworkButton_Click(object? sender, EventArgs e)
-        {
-            ToggleCourseworkControls(true);
-            if (resultsTextBox != null) resultsTextBox.Text = string.Empty;
-            if (modeLabButton != null) modeLabButton.FlatStyle = FlatStyle.Standard;
-            if (modeCourseworkButton != null) modeCourseworkButton.FlatStyle = FlatStyle.Flat;
         }
 
         private void RunLabButton_Click(object? sender, EventArgs e)
