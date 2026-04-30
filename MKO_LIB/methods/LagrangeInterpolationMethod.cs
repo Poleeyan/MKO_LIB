@@ -1,8 +1,6 @@
-using System;
-
-namespace MKO_LIB
+  namespace MKO_LIB
 {
-    public class LagrangeInterpolationMethod
+   public class LagrangeInterpolationMethod
     {
         public static double Calculate(double[] X, double[] Y, double x)
         {

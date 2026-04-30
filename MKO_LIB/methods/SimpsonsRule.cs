@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace MKO_LIB
+﻿  namespace MKO_LIB
 {
-    public class SimpsonsRule
+   public class SimpsonsRule
     {
         public static double Calculate(Func<double, double> f, double a, double b, int n)
         {
@@ -37,4 +35,4 @@ namespace MKO_LIB
             throw new NotImplementedException("Використовуйте перегружену версію з Func<double, double>");
         }
     }
-}
+    }

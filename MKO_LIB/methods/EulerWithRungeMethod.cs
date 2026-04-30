@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-
-namespace MKO_LIB
+    namespace MKO_LIB
 {
     public class EulerWithRungeMethod
     {
@@ -57,4 +54,3 @@ namespace MKO_LIB
         }
     }
 }
-

@@ -1,8 +1,6 @@
-using System;
-
-namespace MKO_LIB
+   namespace MKO_LIB
 {
-    public class NewtonInterpolationMethod
+   public class NewtonInterpolationMethod
     {
         public static double CalculateFirstFormula(double[] X, double[] Y, double h, double x)
         {
@@ -42,4 +40,4 @@ namespace MKO_LIB
             return P;
         }
     }
-}
+    }

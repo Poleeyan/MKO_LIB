@@ -1,5 +1,3 @@
-using System;
-
 namespace MKO_LIB
 {
     public class CubicSplineInterpolationMethod

@@ -1,6 +1,6 @@
-namespace MKO_LIB
+ namespace MKO_LIB
 {
-    public class MatrixAddition
+   public class MatrixAddition
     {
         public static double[,] AddMatrices(double[,] A, double[,] B)
         {
@@ -31,4 +31,4 @@ namespace MKO_LIB
             return C;
         }
     }
-}
+    }

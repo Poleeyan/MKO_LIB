@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-
-namespace MKO_LIB
+   namespace MKO_LIB
 {
-    public class EulersMethod
+   public class EulersMethod
     {
         public List<(double x, double y)> Solve(Func<double, double, double> f, double a, double b, double h, double y0)
         {

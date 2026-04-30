@@ -1,7 +1,4 @@
-using System;
-using System.Text;
-
-namespace MKO_LIB
+   namespace MKO_LIB
 {
     public class SimpleIterationMethod
     {

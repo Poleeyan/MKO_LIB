@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 using System.Text;
 
@@ -15,11 +14,6 @@ namespace MKO_LIB
             
             Func<double, double> f = x => 0.5 * Math.Pow(x, 5) - 0.005 * x - 1.0;
             Func<double, double> df = x => 2.5 * Math.Pow(x, 4) - 0.005;
-
-            // These were previously hardcoded:
-            // double a = 1.0;
-            // double b = 2.0;
-            // double epsilon = 0.01;
 
             output.AppendLine($"\nІнтервал для дійсного кореня f({a}) = {f(a):F5}, f({b}) = {f(b):F5} : [{a}, {b}]");
             output.AppendLine($"Задана похибка: {epsilon}");

@@ -1,5 +1,5 @@
-using System;
-
+namespace MKO_LIB
+{
 public class BackSubstitutionMethod
 {
     public static double[] Solve(double[][] a, double[] b, int n)
@@ -33,4 +33,5 @@ public class BackSubstitutionMethod
         // Повертаємо вектор розв'язків
         return x;
     }
+}
 }

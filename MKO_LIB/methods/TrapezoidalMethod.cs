@@ -1,6 +1,4 @@
-using System;
-
-namespace MKO_LIB
+    namespace MKO_LIB
 {
     public class TrapezoidalMethod
     {
@@ -24,4 +22,4 @@ namespace MKO_LIB
             return I;
         }
     }
-}
+    }

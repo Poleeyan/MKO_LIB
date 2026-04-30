@@ -1,5 +1,5 @@
-using System;
-
+namespace MKO_LIB
+{
 public class ChordMethod
 {
     private readonly Func<double, double> _function;
@@ -98,4 +98,5 @@ public class ChordResult
     public double Root { get; set; }
     public double FunctionValue { get; set; }
     public int Iterations { get; set; }
+}
 }

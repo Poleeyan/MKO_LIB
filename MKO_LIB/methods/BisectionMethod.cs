@@ -1,5 +1,5 @@
-using System;
-
+namespace MKO_LIB
+{
 public class BisectionMethod
 {
     private readonly Func<double, double> _function;
@@ -55,4 +55,5 @@ public class BisectionResult
     public double FunctionValue { get; set; }
     public int Iterations { get; set; }
     public double Precision { get; set; }
+}
 }

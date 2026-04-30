@@ -1,6 +1,7 @@
-using System;
 using System.Numerics;
 
+namespace MKO_LIB
+{
 public class NewtonMethod
 {
     private readonly Func<double, double> _function;
@@ -133,4 +134,5 @@ public class NewtonResult
     public double FunctionValue { get; set; }
     public int Iterations { get; set; }
     public double Precision { get; set; }
+}
 }

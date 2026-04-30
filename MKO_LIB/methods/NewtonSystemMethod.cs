@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
-
-namespace MKO_LIB
+    namespace MKO_LIB
 {
     public class NewtonSystemMethod
     {

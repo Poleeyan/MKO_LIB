@@ -1,6 +1,6 @@
-namespace MKO_LIB
+  namespace MKO_LIB
 {
-    public class MatrixMultiplication
+   public class MatrixMultiplication
     {
         public static double[,] MultiplyMatrices(double[,] A, double[,] B)
         {

@@ -1,8 +1,6 @@
-using System;
-
-namespace MKO_LIB
+  namespace MKO_LIB
 {
-    public class GaussForwardPass
+   public class GaussForwardPass
     {
         public static void ForwardElimination(double[,] a, double[] b, int n)
         {

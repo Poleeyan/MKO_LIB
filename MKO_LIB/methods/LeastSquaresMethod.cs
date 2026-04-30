@@ -1,6 +1,4 @@
-using System;
-
-namespace MKO_LIB
+  namespace MKO_LIB
 {
     public class LeastSquaresResult
     {
