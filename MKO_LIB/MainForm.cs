@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace MKO_LIB
@@ -9,6 +10,7 @@ namespace MKO_LIB
         private ComboBox? labComboBox;
         private Button? modeLabButton;
         private Button? modeCourseworkButton;
+        private Button? runLabButton;
         private Button? clearButton;
         
         // Fields for coursework
@@ -58,13 +60,20 @@ namespace MKO_LIB
             clearButton.Click += ClearButton_Click;
             this.Controls.Add(clearButton);
 
+            // Run Lab Button
+            runLabButton = new Button();
+            runLabButton.Text = "Run";
+            runLabButton.Location = new System.Drawing.Point(210, 58);
+            runLabButton.Size = new System.Drawing.Size(80, 26);
+            runLabButton.Click += RunLabButton_Click;
+            this.Controls.Add(runLabButton);
+
             // Lab ComboBox
             labComboBox = new ComboBox();
             labComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             labComboBox.Items.AddRange(new object[] { "Lab1", "Lab2", "Lab3", "Lab4", "Lab5", "Lab6", "Lab7", "Lab8" });
             labComboBox.Location = new System.Drawing.Point(50, 60);
             labComboBox.Size = new System.Drawing.Size(150, 30);
-            labComboBox.SelectedIndexChanged += ModeCombo_SelectedIndexChanged;
             this.Controls.Add(labComboBox);
             labComboBox.SelectedIndex = 0;
 
@@ -115,6 +124,7 @@ namespace MKO_LIB
         private void ToggleCourseworkControls(bool show)
         {
             if (labComboBox != null) labComboBox.Visible = !show;
+            if (runLabButton != null) runLabButton.Visible = !show;
             if (aLabel != null) aLabel.Visible = show;
             if (aInput != null) aInput.Visible = show;
             if (bLabel != null) bLabel.Visible = show;
@@ -129,6 +139,7 @@ namespace MKO_LIB
         private void ModeLabButton_Click(object? sender, EventArgs e)
         {
             ToggleCourseworkControls(false);
+            if (resultsTextBox != null) resultsTextBox.Text = string.Empty;
             if (modeLabButton != null) modeLabButton.FlatStyle = FlatStyle.Flat;
             if (modeCourseworkButton != null) modeCourseworkButton.FlatStyle = FlatStyle.Standard;
         }
@@ -136,16 +147,18 @@ namespace MKO_LIB
         private void ModeCourseworkButton_Click(object? sender, EventArgs e)
         {
             ToggleCourseworkControls(true);
+            if (resultsTextBox != null) resultsTextBox.Text = string.Empty;
             if (modeLabButton != null) modeLabButton.FlatStyle = FlatStyle.Standard;
             if (modeCourseworkButton != null) modeCourseworkButton.FlatStyle = FlatStyle.Flat;
         }
 
-        private void ModeCombo_SelectedIndexChanged(object? sender, EventArgs e)
+        private void RunLabButton_Click(object? sender, EventArgs e)
         {
             try
             {
                 if (resultsTextBox == null || labComboBox == null || labComboBox.SelectedItem == null)
                     return;
+                resultsTextBox.Text = string.Empty;
                 Dictionary<string, Func<string>> labMethods = new Dictionary<string, Func<string>>()
                 {
                     { "Lab1", Lab1.Run },
@@ -185,24 +198,44 @@ namespace MKO_LIB
             try
             {
                 if (resultsTextBox == null) return;
+                resultsTextBox.Text = string.Empty;
 
-                double a = double.Parse(aInput?.Text ?? "1.0");
-                double b = double.Parse(bInput?.Text ?? "2.0");
-                double eps = double.Parse(epsInput?.Text ?? "0.01");
-                double x0 = double.Parse(x0Input?.Text ?? "2.0");
+                if (!TryParseInput(aInput, out double a) ||
+                    !TryParseInput(bInput, out double b) ||
+                    !TryParseInput(epsInput, out double eps) ||
+                    !TryParseInput(x0Input, out double x0))
+                {
+                    MessageBox.Show("Помилка вводу: будь ласка, введіть коректні числові значення. Букви та інші спеціальні символи не допускаються.", "Некоректне значення", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (a >= b)
+                {
+                    MessageBox.Show("Некоректний інтервал: значення 'a' повинно бути менше за значення 'b'.", "Помилка інтервалу", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (eps <= 0)
+                {
+                    MessageBox.Show("Некоректна похибка: 'eps' повинно бути більше за 0.", "Помилка похибки", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 resultsTextBox.Text = Coursework.Run(a, b, eps, x0);
-            }
-            catch (FormatException)
-            {
-                if (resultsTextBox != null)
-                    resultsTextBox.Text = "Please enter valid numeric values for coursework inputs.";
             }
             catch (Exception ex)
             {
                 if (resultsTextBox != null)
                     resultsTextBox.Text = $"Error: {ex.Message}\n\n{ex.StackTrace}";
             }
+        }
+
+        private static bool TryParseInput(TextBox? input, out double value)
+        {
+            string raw = input?.Text ?? string.Empty;
+            // Замінюємо кому на крапку, щоб працювало і з точкою, і з комою
+            raw = raw.Replace(',', '.');
+            return double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out value);
         }
     }
 }

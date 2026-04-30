@@ -73,17 +73,19 @@ namespace MKO_LIB
             // Знаходимо комплексні корені.
             // Рівняння 5-го степеня має 5 коренів. Один дійсний ми вже знайшли.
             // Залишається 4 комплексних корені (2 спряжені пари).
-            Complex[] initialGuesses = new Complex[]
-            {
+            Func<Complex, Complex> fc = z => 0.5 * Complex.Pow(z, 5) - 0.005 * z - 1.0;
+            Func<Complex, Complex> dfc = z => 2.5 * Complex.Pow(z, 4) - 0.005;
+            Complex[] initialGuesses =
+            [
                 new Complex(0.5, 1.0),
                 new Complex(0.5, -1.0),
                 new Complex(-1.0, 0.5),
                 new Complex(-1.0, -0.5)
-            };
+            ];
 
             for (int i = 0; i < initialGuesses.Length; i++)
             {
-                var (root, iterations) = FindComplexRootNewton(initialGuesses[i], epsilon);
+                var (root, iterations) = NewtonMethod.SolveComplex(fc, dfc, initialGuesses[i], epsilon);
                 
                 string sign = root.Imaginary >= 0 ? "+" : "-";
                 double imagAbs = Math.Abs(root.Imaginary);
@@ -92,33 +94,6 @@ namespace MKO_LIB
             }
 
             return output.ToString();
-        }
-
-        // Локальна реалізація методу Ньютона, що підтримує комплексні числа (System.Numerics.Complex)
-        private static (Complex Root, int Iterations) FindComplexRootNewton(Complex z0, double epsilon)
-        {
-            Complex z = z0;
-            int iterations = 0;
-            double precision;
-
-            do
-            {
-                iterations++;
-                Complex z_prev = z;
-                
-                // Значення функції f(z) = 0.5 * z^5 - 0.005 * z - 1
-                Complex fz = 0.5 * Complex.Pow(z, 5) - 0.005 * z - 1.0;
-                
-                // Значення похідної f'(z) = 2.5 * z^4 - 0.005
-                Complex dfz = 2.5 * Complex.Pow(z, 4) - 0.005;
-
-                // Метод Ньютона: z_new = z - f(z) / f'(z)
-                z = z - fz / dfz;
-
-                precision = Complex.Abs(z - z_prev);
-            } while (precision > epsilon && iterations < 100);
-
-            return (z, iterations);
         }
     }
 }

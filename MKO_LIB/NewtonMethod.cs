@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 
 public class NewtonMethod
 {
@@ -97,6 +98,33 @@ public class NewtonMethod
             Iterations = iterations,
             Precision = precision
         };
+    }
+
+    public static (Complex Root, int Iterations) SolveComplex(
+        Func<Complex, Complex> function,
+        Func<Complex, Complex> derivative,
+        Complex z0,
+        double epsilon,
+        int maxIterations = 100)
+    {
+        Complex z = z0;
+        int iterations = 0;
+        double precision;
+
+        do
+        {
+            iterations++;
+            Complex zPrev = z;
+
+            Complex fz = function(z);
+            Complex dfz = derivative(z);
+
+            z = z - fz / dfz;
+
+            precision = Complex.Abs(z - zPrev);
+        } while (precision > epsilon && iterations < maxIterations);
+
+        return (z, iterations);
     }
 }
 public class NewtonResult
