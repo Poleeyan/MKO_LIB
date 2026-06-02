@@ -29,12 +29,35 @@ namespace MKO_LIB
             {
                 var result = newtonMethod.Solve(x0, epsilon);
 
-                sb.AppendLine("Результат розв'язання:");
+                sb.AppendLine("Ітерації методу Ньютона:");
+                sb.AppendLine(string.Format("{0,-6} | {1,-12} | {2,-12} | {3,-12} | {4,-12} | {5,-12} | {6,-12} | {7,-12}",
+                    "Ітер.", "x1", "x2", "x3", "f1(x)", "f2(x)", "f3(x)", "Похибка"));
+                sb.AppendLine(new string('-', 101));
+
+                foreach (var step in result.Steps)
+                {
+                    sb.AppendLine(string.Format("{0,-6} | {1,-12:F6} | {2,-12:F6} | {3,-12:F6} | {4,-12:F6} | {5,-12:F6} | {6,-12:F6} | {7,-12:E4}",
+                        step.IterationNumber,
+                        step.X[0], step.X[1], step.X[2],
+                        step.F[0], step.F[1], step.F[2],
+                        step.Error));
+                }
+                sb.AppendLine(new string('-', 101));
+                sb.AppendLine();
+
+                sb.AppendLine("Результат розв'язання (кінцевий результат):");
                 for (int i = 0; i < result.Root.Length; i++)
                 {
                     sb.AppendLine($"x{i + 1} = {result.Root[i]:F6}");
                 }
                 sb.AppendLine($"Кількість ітерацій: {result.Iterations}");
+                sb.AppendLine();
+
+                sb.AppendLine("Перевірка (підстановка розв'язку в рівняння системи):");
+                double[] check = Lab6Equations.SystemFunctions(result.Root);
+                sb.AppendLine($"f1(x*) = {check[0]:E6} (повинно бути ≈ 0)");
+                sb.AppendLine($"f2(x*) = {check[1]:E6} (повинно бути ≈ 0)");
+                sb.AppendLine($"f3(x*) = {check[2]:E6} (повинно бути ≈ 0)");
             }
             catch (Exception ex)
             {

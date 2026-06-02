@@ -39,6 +39,7 @@ namespace MKO_LIB
             modeTabControl = new TabControl();
             modeTabControl.Location = new System.Drawing.Point(50, 20);
             modeTabControl.Size = new System.Drawing.Size(500, 70);
+            modeTabControl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             modeTabControl.SelectedIndexChanged += ModeTabControl_SelectedIndexChanged;
 
             // Lab TabPage
@@ -56,6 +57,7 @@ namespace MKO_LIB
             clearButton.Text = "Clear";
             clearButton.Location = new System.Drawing.Point(560, 40);
             clearButton.Size = new System.Drawing.Size(90, 30);
+            clearButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             clearButton.Click += ClearButton_Click;
             this.Controls.Add(clearButton);
 
@@ -114,6 +116,7 @@ namespace MKO_LIB
             resultsTextBox.Location = new System.Drawing.Point(50, 100);
             resultsTextBox.Size = new System.Drawing.Size(600, 430);
             resultsTextBox.Font = new System.Drawing.Font("Courier New", 10);
+            resultsTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.Controls.Add(resultsTextBox);
         }
 

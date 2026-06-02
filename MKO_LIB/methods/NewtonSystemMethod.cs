@@ -1,5 +1,13 @@
     namespace MKO_LIB
 {
+    public class NewtonIterationStep
+    {
+        public int IterationNumber { get; set; }
+        public double[] X { get; set; } = null!;
+        public double[] F { get; set; } = null!;
+        public double Error { get; set; }
+    }
+
     public class NewtonSystemMethod
     {
         private readonly Func<double[], double[]> _systemFunctions;
@@ -9,12 +17,13 @@
             _systemFunctions = systemFunctions;
             _jacobianMatrix = jacobianMatrix;
         }
-        public (double[] Root, int Iterations) Solve(double[] x0, double epsilon, int maxIterations = 100)
+        public (double[] Root, int Iterations, List<NewtonIterationStep> Steps) Solve(double[] x0, double epsilon, int maxIterations = 100)
         {
             int n = x0.Length;
             double[] x = (double[])x0.Clone();
             int k = 0;
             double error = double.MaxValue;
+            List<NewtonIterationStep> steps = new List<NewtonIterationStep>();
 
             while (error > epsilon && k < maxIterations)
             {
@@ -51,6 +60,14 @@
                     }
                 }
 
+                steps.Add(new NewtonIterationStep
+                {
+                    IterationNumber = k + 1,
+                    X = (double[])x.Clone(),
+                    F = (double[])F.Clone(),
+                    Error = error
+                });
+
                 x = xNext;
                 k++;
             }
@@ -61,7 +78,7 @@
                 throw new InvalidOperationException("Досягнуто максимальну кількість ітерацій: метод не зійшовся.");
             }
 
-            return (x, k);
+            return (x, k, steps);
         }
     }
 }
