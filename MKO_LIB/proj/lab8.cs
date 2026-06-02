@@ -13,14 +13,14 @@ namespace MKO_LIB
 
             try
             {
-                // Табличні дані для Варіанту 7
-                double[] X = { 3, 6, 9, 12 };
-                double[] Y = { 12, 16, 10, 21 };
-                double xTarget = 4.5; // Точка інтерполяції для Варіанту 7
+                // Табличні дані
+                double[] X = { -2, 1, 3, 5, 7 };
+                double[] Y = { 10, 2, 6, -6, 12 };
+                double xTarget = 2; // Точка інтерполяції
 
                 output.AppendLine("Вхідні дані (таблиця):");
-                output.AppendLine($"x:  {string.Join("  ", X.Select(x => $"{x,2}"))}");
-                output.AppendLine($"y:  {string.Join("  ", Y.Select(y => $"{y,2}"))}");
+                output.AppendLine($"x:  {string.Join("  ", X.Select(x => $"{x,3}"))}");
+                output.AppendLine($"y:  {string.Join("  ", Y.Select(y => $"{y,3}"))}");
                 output.AppendLine($"Точка інтерполяції x* = {xTarget}\n");
 
                 int n = X.Length - 1; // Кількість інтервалів (3)
@@ -108,7 +108,7 @@ namespace MKO_LIB
                 row++;
 
                 // Виведення списку рівнянь
-                output.AppendLine("Крок 1: Складання системи з 12 рівнянь:");
+                output.AppendLine($"Крок 1: Складання системи з {numEq} рівнянь:");
                 for (int i = 0; i < numEq; i++)
                 {
                     output.AppendLine($"{i + 1,2}) {eqDescriptions[i]}");
@@ -117,8 +117,16 @@ namespace MKO_LIB
 
                 // Виведення матриці системи
                 output.AppendLine("Крок 2: Розширена матриця системи [A | b]:");
-                output.AppendLine(" №   A1   B1   C1   D1   A2   B2   C2   D2   A3   B3   C3   D3  |  b");
-                output.AppendLine(new string('-', 76));
+                output.Append(" №|");
+                for (int i = 0; i < n; i++)
+                {
+                    output.Append($"{ "A" + (i + 1),5}");
+                    output.Append($"{ "B" + (i + 1),5}");
+                    output.Append($"{ "C" + (i + 1),5}");
+                    output.Append($"{ "D" + (i + 1),5}");
+                }
+                output.AppendLine(" |  b");
+                output.AppendLine(new string('-', 3 + 5 * numEq + 5));
                 for (int i = 0; i < numEq; i++)
                 {
                     output.Append($"{i + 1,2}|");

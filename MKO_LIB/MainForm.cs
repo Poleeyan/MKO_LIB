@@ -28,13 +28,14 @@ namespace MKO_LIB
         {
             InitializeComponent();
             this.Text = "Equation Solvers (Labs & Coursework)";
-            this.Width = 700;
-            this.Height = 600;
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void InitializeComponent()
         {
+            this.Width = 700;
+            this.Height = 600;
+
             // TabControl
             modeTabControl = new TabControl();
             modeTabControl.Location = new System.Drawing.Point(50, 20);
