@@ -39,7 +39,7 @@ namespace MKO_LIB
                     double lagrangeResult = LagrangeInterpolationMethod.Calculate(X, Y, xTarget);
 
                     // Справжнє значення функції y = x^3 + 3x^2 - x - 1
-                    double exactValue = Math.Pow(xTarget, 3) + 3 * Math.Pow(xTarget, 2) - xTarget - 1;
+                    double exactValue = Lab7Equations.ExactValue(xTarget);
 
                     output.AppendLine($"Шукана точка X* = {xTarget}");
                     output.AppendLine($"Метод Лагранжа Y*: {lagrangeResult:F4}");
@@ -54,6 +54,14 @@ namespace MKO_LIB
             }
 
             return output.ToString();
+        }
+    }
+
+    public static class Lab7Equations
+    {
+        public static double ExactValue(double x)
+        {
+            return Math.Pow(x, 3) + 3 * Math.Pow(x, 2) - x - 1;
         }
     }
 }

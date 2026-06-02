@@ -12,8 +12,8 @@ namespace MKO_LIB
             output.AppendLine("=== Завдання на курсову роботу №2 ===");
             output.AppendLine("Рівняння: 0.5x^5 - 0.005x - 1 = 0");
             
-            Func<double, double> f = x => 0.5 * Math.Pow(x, 5) - 0.005 * x - 1.0;
-            Func<double, double> df = x => 2.5 * Math.Pow(x, 4) - 0.005;
+            Func<double, double> f = CourseworkEquations.F;
+            Func<double, double> df = CourseworkEquations.Df;
 
             output.AppendLine($"\nІнтервал для дійсного кореня f({a}) = {f(a):F5}, f({b}) = {f(b):F5} : [{a}, {b}]");
             output.AppendLine($"Задана похибка: {epsilon}");
@@ -67,8 +67,8 @@ namespace MKO_LIB
             // Знаходимо комплексні корені.
             // Рівняння 5-го степеня має 5 коренів. Один дійсний ми вже знайшли.
             // Залишається 4 комплексних корені (2 спряжені пари).
-            Func<Complex, Complex> fc = z => 0.5 * Complex.Pow(z, 5) - 0.005 * z - 1.0;
-            Func<Complex, Complex> dfc = z => 2.5 * Complex.Pow(z, 4) - 0.005;
+            Func<Complex, Complex> fc = CourseworkEquations.Fc;
+            Func<Complex, Complex> dfc = CourseworkEquations.Dfc;
             Complex[] initialGuesses =
             [
                 new Complex(0.5, 1.0),
@@ -88,6 +88,29 @@ namespace MKO_LIB
             }
 
             return output.ToString();
+        }
+    }
+
+    public static class CourseworkEquations
+    {
+        public static double F(double x)
+        {
+            return 0.5 * Math.Pow(x, 5) - 0.005 * x - 1.0;
+        }
+
+        public static double Df(double x)
+        {
+            return 2.5 * Math.Pow(x, 4) - 0.005;
+        }
+
+        public static Complex Fc(Complex z)
+        {
+            return 0.5 * Complex.Pow(z, 5) - 0.005 * z - 1.0;
+        }
+
+        public static Complex Dfc(Complex z)
+        {
+            return 2.5 * Complex.Pow(z, 4) - 0.005;
         }
     }
 }

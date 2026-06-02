@@ -17,19 +17,8 @@ namespace MKO_LIB
             sb.AppendLine("Похибка: epsilon = 1e-5");
             sb.AppendLine();
 
-            Func<double[], double[]> systemFunctions = (x) => new double[3]
-            {
-                x[0] * x[0] + x[1] * x[1] + 2 * x[2] * x[2] - 4,
-                x[0] * x[1] + x[1] * x[2] + x[0] * x[2] - 3,
-                2 * x[0] * x[1] * x[1] + x[1] * Math.Pow(x[2], 3) + 3 * Math.Pow(x[0], 4) - 6
-            };
-
-            Func<double[], double[,]> jacobianMatrix = (x) => new double[3, 3]
-            {
-                { 2 * x[0], 2 * x[1], 4 * x[2] },
-                { x[1] + x[2], x[0] + x[2], x[1] + x[0] },
-                { 2 * x[1] * x[1] + 12 * Math.Pow(x[0], 3), 4 * x[0] * x[1] + Math.Pow(x[2], 3), 3 * x[1] * x[2] * x[2] }
-            };
+            Func<double[], double[]> systemFunctions = Lab6Equations.SystemFunctions;
+            Func<double[], double[,]> jacobianMatrix = Lab6Jacobian.Calculate;
 
             NewtonSystemMethod newtonMethod = new NewtonSystemMethod(systemFunctions, jacobianMatrix);
 
@@ -53,6 +42,32 @@ namespace MKO_LIB
             }
 
             return sb.ToString();
+        }
+    }
+
+    public static class Lab6Equations
+    {
+        public static double[] SystemFunctions(double[] x)
+        {
+            return new double[3]
+            {
+                x[0] * x[0] + x[1] * x[1] + 2 * x[2] * x[2] - 4,
+                x[0] * x[1] + x[1] * x[2] + x[0] * x[2] - 3,
+                2 * x[0] * x[1] * x[1] + x[1] * Math.Pow(x[2], 3) + 3 * Math.Pow(x[0], 4) - 6
+            };
+        }
+    }
+
+    public static class Lab6Jacobian
+    {
+        public static double[,] Calculate(double[] x)
+        {
+            return new double[3, 3]
+            {
+                { 2 * x[0], 2 * x[1], 4 * x[2] },
+                { x[1] + x[2], x[0] + x[2], x[1] + x[0] },
+                { 2 * x[1] * x[1] + 12 * Math.Pow(x[0], 3), 4 * x[0] * x[1] + Math.Pow(x[2], 3), 3 * x[1] * x[2] * x[2] }
+            };
         }
     }
 }

@@ -12,7 +12,7 @@ namespace MKO_LIB
             sb.AppendLine();
 
             // Функція для інтегрування: lg(x) / x^4  (lg - десятковий логарифм)
-            Func<double, double> f = (x) => Math.Log10(x) / Math.Pow(x, 4);
+            Func<double, double> f = Lab4Equations.F;
 
             double a = 1.0;
             double b = 10.0;
@@ -35,6 +35,14 @@ namespace MKO_LIB
 
             sb.AppendLine(new string('-', 65));
             return sb.ToString();
+        }
+    }
+
+    public static class Lab4Equations
+    {
+        public static double F(double x)
+        {
+            return Math.Log10(x) / Math.Pow(x, 4);
         }
     }
 }

@@ -10,11 +10,7 @@ namespace MKO_LIB
 
             // Функція f(x) = x + ln(x) = 0
             // При a₁ = a₂ = a₃ = 1: a₁*x + a₂*ln(a₃*x) = 0 => x + ln(x) = 0
-            Func<double, double> f = x => 
-            {
-                if (x <= 0) throw new ArgumentException("x повинен бути > 0 для ln(x)");
-                return x + Math.Log(x);
-            };
+            Func<double, double> f = Lab2Equations.F;
 
             // Параметри для методу бісекції
             output.AppendLine("=== Розв'язання рівняння: x + ln(x) = 0 ===");
@@ -73,6 +69,15 @@ namespace MKO_LIB
             }
 
             return output.ToString();
+        }
+    }
+
+    public static class Lab2Equations
+    {
+        public static double F(double x)
+        {
+            if (x <= 0) throw new ArgumentException("x повинен бути > 0 для ln(x)");
+            return x + Math.Log(x);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace MKO_LIB
             sb.AppendLine();
 
             // Функція f(x, y) = 2xy + 3y
-            Func<double, double, double> f = (x, y) => 2 * x * y + 3 * y;
+            Func<double, double, double> f = Lab5Equations.F;
 
             double a = 0.0;
             double b = 1.0;
@@ -43,6 +43,14 @@ namespace MKO_LIB
 
             sb.AppendLine(new string('-', 65));
             return sb.ToString();
+        }
+    }
+
+    public static class Lab5Equations
+    {
+        public static double F(double x, double y)
+        {
+            return 2 * x * y + 3 * y;
         }
     }
 }
