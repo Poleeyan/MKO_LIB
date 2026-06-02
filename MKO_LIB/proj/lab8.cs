@@ -203,12 +203,6 @@ namespace MKO_LIB
                 output.AppendLine($"S_{targetIntervalIndex + 1}({xTarget}) = {term3:F4} + ({term2:F4}) + ({term1:F4}) + ({term0:F4})");
                 output.AppendLine($"S({xTarget}) ≈ {splineValue:F4}\n");
 
-                output.AppendLine("Висновок:");
-                output.AppendLine("У ході лабораторної роботи було досліджено метод побудови кубічних сплайнів третього порядку.");
-                output.AppendLine($"Для заданих вузлів з відповідними значеннями було динамічно складено систему з {numEq} лінійних рівнянь");
-                output.AppendLine("та знайдено коефіцієнти кубічних поліномів за допомогою методу Гаусса.");
-                output.AppendLine($"У точці інтерполяції x* = {xTarget} отримано значення S({xTarget}) ≈ {splineValue:F4}, що забезпечує");
-                output.AppendLine("гладку інтерполяційну криву на всьому заданому відрізку.");
             }
             catch (Exception ex)
             {
