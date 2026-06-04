@@ -11,12 +11,10 @@ namespace MKO_LIB
             {
                 throw new ArgumentException("Матриця A повинна бути квадратною і за розміром відповідати вектору b.");
             }
-
             double[] x = new double[n]; // початкове наближення (нулі)
             double[] x_new = new double[n];
             int iterations = 0;
             double[] lastErrors = new double[n];
-            
             do
             {
                 for (int i = 0; i < n; i++)
@@ -25,7 +23,6 @@ namespace MKO_LIB
                     {
                         throw new InvalidOperationException($"Діагональний елемент A[{i},{i}] дорівнює нулю. Метод не застосовний напряму.");
                     }
-
                     double sum = 0;
                     for (int j = 0; j < n; j++)
                     {
@@ -36,7 +33,6 @@ namespace MKO_LIB
                     }
                     x_new[i] = (b[i] - sum) / A[i, i];
                 }
-
                 double maxError = 0;
                 for (int i = 0; i < n; i++)
                 {
@@ -44,14 +40,11 @@ namespace MKO_LIB
                     maxError = Math.Max(maxError, lastErrors[i]);
                     x[i] = x_new[i];
                 }
-
                 iterations++;
-
                 if (maxError < delta)
                 {
                     break;
                 }
-
                 if (iterations >= maxIterations)
                 {
                     break; // Перевищено ліміт (ймовірно, метод розходиться)
