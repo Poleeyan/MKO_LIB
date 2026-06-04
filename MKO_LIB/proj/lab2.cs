@@ -1,3 +1,4 @@
+#if false
 using System.Text;
 
 namespace MKO_LIB
@@ -81,3 +82,4 @@ namespace MKO_LIB
         }
     }
 }
+#endif

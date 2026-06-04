@@ -5,11 +5,11 @@ namespace MKO_LIB
     public partial class MainForm : Form
     {
         private TextBox? resultsTextBox;
-        private ComboBox? labComboBox;
+        // private ComboBox? labComboBox;
         private TabControl? modeTabControl;
-        private TabPage? labTabPage;
+        // private TabPage? labTabPage;
         private TabPage? courseworkTabPage;
-        private Button? runLabButton;
+        // private Button? runLabButton;
         private Button? clearButton;
         
         // Fields for coursework
@@ -27,7 +27,7 @@ namespace MKO_LIB
         public MainForm()
         {
             InitializeComponent();
-            this.Text = "Equation Solvers (Labs & Coursework)";
+            this.Text = "Equation Solvers (Coursework)";
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
@@ -44,12 +44,12 @@ namespace MKO_LIB
             modeTabControl.SelectedIndexChanged += ModeTabControl_SelectedIndexChanged;
 
             // Lab TabPage
-            labTabPage = new TabPage("Labs");
+            // labTabPage = new TabPage("Labs");
             
             // Coursework TabPage
             courseworkTabPage = new TabPage("Coursework");
 
-            modeTabControl.TabPages.Add(labTabPage);
+            // modeTabControl.TabPages.Add(labTabPage);
             modeTabControl.TabPages.Add(courseworkTabPage);
             this.Controls.Add(modeTabControl);
 
@@ -63,6 +63,7 @@ namespace MKO_LIB
             this.Controls.Add(clearButton);
 
             // Run Lab Button
+            /*
             runLabButton = new Button();
             runLabButton.Text = "Run Lab";
             runLabButton.Location = new System.Drawing.Point(170, 10);
@@ -78,6 +79,7 @@ namespace MKO_LIB
             labComboBox.Size = new System.Drawing.Size(150, 30);
             labTabPage.Controls.Add(labComboBox);
             labComboBox.SelectedIndex = 0;
+            */
 
             // Coursework Labels & Inputs
             aLabel = new Label() { Text = "a=", Location = new System.Drawing.Point(10, 13), Size = new System.Drawing.Size(30, 20) };
@@ -126,6 +128,7 @@ namespace MKO_LIB
             if (resultsTextBox != null) resultsTextBox.Text = string.Empty;
         }
 
+        /*
         private void RunLabButton_Click(object? sender, EventArgs e)
         {
             try
@@ -160,6 +163,7 @@ namespace MKO_LIB
                     resultsTextBox.Text = $"Error: {ex.Message}\n\n{ex.StackTrace}";
             }
         }
+        */
 
         private void ClearButton_Click(object? sender, EventArgs e)
         {

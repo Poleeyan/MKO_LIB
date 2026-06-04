@@ -1,3 +1,4 @@
+#if false
 using System.Text;
 
 namespace MKO_LIB
@@ -38,7 +39,7 @@ namespace MKO_LIB
             {
                 // Для 0-ї ітерації виводимо початкову точку
                 sb.AppendLine(String.Format("{0,-10:F2} | {1,-25:F8} | {2,-25:F8}", 
-                    resEuler[i].x, resEuler[i].y, resRK4[i+ 1].y)); // Додано +1 для RK4
+                     resEuler[i].x, resEuler[i].y, resRK4[i+ 1].y)); // Додано +1 для RK4
             }
 
             sb.AppendLine(new string('-', 65));
@@ -54,3 +55,4 @@ namespace MKO_LIB
         }
     }
 }
+#endif
