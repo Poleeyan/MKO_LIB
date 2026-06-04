@@ -1,59 +1,86 @@
+using System;
+using System.Collections.Generic;
+
 namespace MKO_LIB
 {
-public class BisectionMethod
-{
-    private readonly Func<double, double> _function;
-
-    public BisectionMethod(Func<double, double> function)
+    public class BisectionStep
     {
-        _function = function;
+        public int Iteration { get; set; }
+        public double A { get; set; }
+        public double B { get; set; }
+        public double C { get; set; }
+        public double FC { get; set; }
+        public double Precision { get; set; }
     }
 
-    public BisectionResult Solve(double a, double b, double delta)
+    public class BisectionMethod
     {
-        // Перевірка коректності вхідних даних
-        if (_function(a) * _function(b) > 0)
+        private readonly Func<double, double> _function;
+
+        public BisectionMethod(Func<double, double> function)
         {
-            throw new ArgumentException("f(a) та f(b) повинні мати різні знаки!");
+            _function = function;
         }
 
-        double c;
-        int iterations = 0;
-
-        do
+        public BisectionResult Solve(double a, double b, double delta)
         {
-            // Крок 2: c = (a+b) / 2
-            c = (a + b) / 2;
-            iterations++;
-
-            // Крок 3: f(a)*f(c) > 0? якщо так: a=c, якщо ні: b=c
-            if (_function(a) * _function(c) > 0)
+            // Перевірка коректності вхідних даних
+            if (_function(a) * _function(b) > 0)
             {
-                a = c;
-            }
-            else
-            {
-                b = c;
+                throw new ArgumentException("f(a) та f(b) повинні мати різні знаки!");
             }
 
-            // Крок 4: |b-a| >= delta? якщо так: повернення до 2, якщо ні: вивід c
-        } while (Math.Abs(b - a) >= delta);
+            double c;
+            int iterations = 0;
+            var steps = new List<BisectionStep>();
 
-        return new BisectionResult
-        {
-            Root = c,
-            FunctionValue = _function(c),
-            Iterations = iterations,
-            Precision = Math.Abs(b - a)
-        };
+            do
+            {
+                // Крок 2: c = (a+b) / 2
+                c = (a + b) / 2;
+                iterations++;
+                double fc = _function(c);
+
+                steps.Add(new BisectionStep
+                {
+                    Iteration = iterations,
+                    A = a,
+                    B = b,
+                    C = c,
+                    FC = fc,
+                    Precision = Math.Abs(b - a)
+                });
+
+                // Крок 3: f(a)*f(c) > 0? якщо так: a=c, якщо ні: b=c
+                if (_function(a) * fc > 0)
+                {
+                    a = c;
+                }
+                else
+                {
+                    b = c;
+                }
+
+                // Крок 4: |b-a| >= delta? якщо так: повернення до 2, якщо ні: вивід c
+            } while (Math.Abs(b - a) >= delta);
+
+            return new BisectionResult
+            {
+                Root = c,
+                FunctionValue = _function(c),
+                Iterations = iterations,
+                Precision = Math.Abs(b - a),
+                Steps = steps
+            };
+        }
     }
-}
 
-public class BisectionResult
-{
-    public double Root { get; set; }
-    public double FunctionValue { get; set; }
-    public int Iterations { get; set; }
-    public double Precision { get; set; }
-}
+    public class BisectionResult
+    {
+        public double Root { get; set; }
+        public double FunctionValue { get; set; }
+        public int Iterations { get; set; }
+        public double Precision { get; set; }
+        public List<BisectionStep> Steps { get; set; } = new List<BisectionStep>();
+    }
 }

@@ -1,102 +1,129 @@
+using System;
+using System.Collections.Generic;
+
 namespace MKO_LIB
 {
-public class ChordMethod
-{
-    private readonly Func<double, double> _function;
-
-    public ChordMethod(Func<double, double> function)
+    public class ChordStep
     {
-        _function = function;
+        public int Iteration { get; set; }
+        public double A { get; set; }
+        public double B { get; set; }
+        public double X { get; set; }
+        public double FX { get; set; }
     }
 
-    public ChordResult Solve(double a, double b, double epsilon)
+    public class ChordMethod
     {
-        // Крок 2: f(a)*f(b) < 0 у випадку не переходу до наступного кроку кінець
-        if (_function(a) * _function(b) >= 0)
+        private readonly Func<double, double> _function;
+
+        public ChordMethod(Func<double, double> function)
         {
-            throw new ArgumentException("Функція повинна мати різні знаки на кінцях відрізка f(a)*f(b) < 0!");
+            _function = function;
         }
 
-        double x = 0;
-        int iterations = 0;
-
-        while (true)
+        public ChordResult Solve(double a, double b, double epsilon)
         {
-            iterations++;
-
-            double fa = _function(a);
-            double fb = _function(b);
-
-            // Крок 3: x = a - f(a)*(b-a)/(f(b)-f(a)) (коректна формула методу хорд)
-            x = a - (fa * (b - a)) / (fb - fa);
-
-            double fx = _function(x);
-
-            // Крок 4: |f(x)| < epsilon, якщо ні - повертається до кроку 2 (з оновленням меж)
-            if (Math.Abs(fx) < epsilon)
+            if (_function(a) * _function(b) >= 0)
             {
-                break; // досягнута задана точність, кінець
+                throw new ArgumentException("Функція повинна мати різні знаки на кінцях відрізка f(a)*f(b) < 0!");
             }
 
-            // Оновлення початкових точок, щоб шуканий корінь залишався на інтервалі
-            if (fa * fx < 0)
+            double x = 0;
+            int iterations = 0;
+            var steps = new List<ChordStep>();
+
+            while (true)
             {
-                b = x;
+                iterations++;
+
+                double fa = _function(a);
+                double fb = _function(b);
+
+                x = a - (fa * (b - a)) / (fb - fa);
+                double fx = _function(x);
+
+                steps.Add(new ChordStep
+                {
+                    Iteration = iterations,
+                    A = a,
+                    B = b,
+                    X = x,
+                    FX = fx
+                });
+
+                if (Math.Abs(fx) < epsilon)
+                {
+                    break;
+                }
+
+                if (fa * fx < 0)
+                {
+                    b = x;
+                }
+                else
+                {
+                    a = x;
+                }
             }
-            else
+
+            return new ChordResult
             {
-                a = x;
-            }
+                Root = x,
+                FunctionValue = _function(x),
+                Iterations = iterations,
+                Steps = steps
+            };
         }
 
-        // Крок 5: вивід x
-        return new ChordResult
+        public ChordResult SolveAlternative(double a, double b, double epsilon)
         {
-            Root = x,
-            FunctionValue = _function(x),
-            Iterations = iterations
-        };
+            double aFixed = a;
+            double fa = _function(aFixed);
+            double xn = b; 
+            double xn1 = xn;
+            int iterations = 0;
+            var steps = new List<ChordStep>();
+
+            while (true)
+            {
+                iterations++;
+                double fxn = _function(xn);
+
+                xn1 = xn - (fxn * (xn - aFixed)) / (fxn - fa);
+                double fxn1 = _function(xn1);
+
+                steps.Add(new ChordStep
+                {
+                    Iteration = iterations,
+                    A = aFixed,
+                    B = xn,
+                    X = xn1,
+                    FX = fxn1
+                });
+
+                if (Math.Abs(xn1 - xn) < epsilon)
+                {
+                    break;
+                }
+
+                xn = xn1;
+            }
+
+            return new ChordResult
+            {
+                Root = xn1,
+                FunctionValue = _function(xn1),
+                Iterations = iterations,
+                Steps = steps
+            };
+        }
     }
-    public ChordResult SolveAlternative(double a, double b, double epsilon)
+
+    public class ChordResult
     {
-        // Крок 2: x0 = b (припускаємо, що h у вашій блок-схемі означає другу межу відрізка b)
-        double aFixed = a;
-        double fa = _function(aFixed);
-        double xn = b; 
-        double xn1 = xn;
-        int iterations = 0;
-
-        while (true)
-        {
-            iterations++;
-            double fxn = _function(xn);
-
-            // Крок 3: xn+1 = xn - (f(xn)*(xn-a))/(f(xn)-f(a))
-            xn1 = xn - (fxn * (xn - aFixed)) / (fxn - fa);
-
-            // Крок 4: |xn+1 - xn| < epsilon, при невиконанні повертається до кроку 3
-            if (Math.Abs(xn1 - xn) < epsilon)
-            {
-                break; // Точність досягнута
-            }
-
-            xn = xn1; // перехід до наступної ітерації
-        }
-
-        // Крок 5: вивід xn+1
-        return new ChordResult
-        {
-            Root = xn1,
-            FunctionValue = _function(xn1),
-            Iterations = iterations
-        };
+        public double Root { get; set; }
+        public double FunctionValue { get; set; }
+        public int Iterations { get; set; }
+        public List<ChordStep> Steps { get; set; } = new List<ChordStep>();
     }
-}
-
-public class ChordResult
-{
-    public double Root { get; set; }
-    public double FunctionValue { get; set; }
-    public int Iterations { get; set; }
-}
 }

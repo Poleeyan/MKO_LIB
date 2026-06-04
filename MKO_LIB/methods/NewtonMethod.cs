@@ -1,138 +1,197 @@
+using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace MKO_LIB
 {
-public class NewtonMethod
-{
-    private readonly Func<double, double> _function;
-    private readonly Func<double, double>? _derivative;
-    public NewtonMethod(Func<double, double> function, Func<double, double> derivative)
+    public class NewtonStep
     {
-        _function = function;
-        _derivative = derivative;
+        public int Iteration { get; set; }
+        public double XPrev { get; set; }
+        public double FXPrev { get; set; }
+        public double DFxPrev { get; set; }
+        public double XCurr { get; set; }
+        public double Precision { get; set; }
     }
-    public NewtonMethod(Func<double, double> function)
+
+    public class ComplexNewtonStep
     {
-        _function = function;
-        _derivative = null;
+        public int Iteration { get; set; }
+        public Complex ZPrev { get; set; }
+        public Complex ZCurr { get; set; }
+        public double Precision { get; set; }
     }
-    public NewtonResult Solve(double x, double delta)
+
+    public class ComplexNewtonResult
     {
-        if (_derivative == null)
+        public Complex Root { get; set; }
+        public int Iterations { get; set; }
+        public List<ComplexNewtonStep> Steps { get; set; } = new List<ComplexNewtonStep>();
+    }
+
+    public class NewtonMethod
+    {
+        private readonly Func<double, double> _function;
+        private readonly Func<double, double>? _derivative;
+
+        public NewtonMethod(Func<double, double> function, Func<double, double> derivative)
         {
-            throw new InvalidOperationException("Похідна не визначена. Використовуйте конструктор з похідною для методу Ньютона.");
+            _function = function;
+            _derivative = derivative;
         }
 
-        double x0;
-        double fDerivative;
-        int iterations = 0;
-        double precision;
-
-        do
+        public NewtonMethod(Func<double, double> function)
         {
-            // Крок 2: x0 = x (запам'ятовуємо попереднє значення)
-            x0 = x;
+            _function = function;
+            _derivative = null;
+        }
 
-            // Крок 3: x = x0 - f(x0) / f'(x0) (формула методу Ньютона)
-            fDerivative = _derivative(x0);
-            
-            // Перевіка на близькість похідної до нуля
-            if (Math.Abs(fDerivative) < 1e-10)
+        public NewtonResult Solve(double x, double delta)
+        {
+            if (_derivative == null)
             {
-                throw new InvalidOperationException("Похідна близька до нуля. Метод дотичних не збігається.");
+                throw new InvalidOperationException("Похідна не визначена. Використовуйте конструктор з похідною для методу Ньютона.");
             }
 
-            x = x0 - _function(x0) / fDerivative;
+            double x0;
+            double fDerivative;
+            int iterations = 0;
+            double precision;
+            var steps = new List<NewtonStep>();
 
-            iterations++;
-            precision = Math.Abs(x - x0);
-
-            // Крок 4: перевіка умови збіжності |x - x0| ≤ delta
-            // Якщо умова не виконується, цикл повторюється (повернення до кроку 2)
-        } while (precision > delta);
-
-        // Крок 5: вивід результату x
-        return new NewtonResult
-        {
-            Root = x,
-            FunctionValue = _function(x),
-            Iterations = iterations,
-            Precision = precision
-        };
-    }
-    public NewtonResult SolveSecant(double x, double h, double delta)
-    {
-        double x0;
-        double fDerivative;
-        int iterations = 0;
-        double precision;
-
-        do
-        {
-            // Крок 2: x0 = x (запам'ятовуємо попереднє значення)
-            x0 = x;
-
-            // Крок 3: F = (f(x0+h) - f(x0)) / h (числова похідна)
-            fDerivative = (_function(x0 + h) - _function(x0)) / h;
-
-            // Перевіка на близькість похідної до нуля
-            if (Math.Abs(fDerivative) < 1e-10)
+            do
             {
-                throw new InvalidOperationException("Числова похідна близька до нуля. Метод січних не збігається.");
-            }
+                x0 = x;
+                fDerivative = _derivative(x0);
+                
+                if (Math.Abs(fDerivative) < 1e-10)
+                {
+                    throw new InvalidOperationException("Похідна близька до нуля. Метод дотичних не збігається.");
+                }
 
-            // Крок 4: x = x0 - f(x0) / F (метод січних)
-            x = x0 - _function(x0) / fDerivative;
+                double fx0 = _function(x0);
+                x = x0 - fx0 / fDerivative;
 
-            iterations++;
-            precision = Math.Abs(x - x0);
+                iterations++;
+                precision = Math.Abs(x - x0);
 
-            // Крок 5: перевіка умови збіжності |x - x0| ≤ delta
-            // Якщо умова не виконується, цикл повторюється (повернення до кроку 2)
-        } while (precision > delta);
+                steps.Add(new NewtonStep
+                {
+                    Iteration = iterations,
+                    XPrev = x0,
+                    FXPrev = fx0,
+                    DFxPrev = fDerivative,
+                    XCurr = x,
+                    Precision = precision
+                });
 
-        // Крок 6: вивід результату x
-        return new NewtonResult
+            } while (precision > delta);
+
+            return new NewtonResult
+            {
+                Root = x,
+                FunctionValue = _function(x),
+                Iterations = iterations,
+                Precision = precision,
+                Steps = steps
+            };
+        }
+
+        public NewtonResult SolveSecant(double x, double h, double delta)
         {
-            Root = x,
-            FunctionValue = _function(x),
-            Iterations = iterations,
-            Precision = precision
-        };
+            double x0;
+            double fDerivative;
+            int iterations = 0;
+            double precision;
+            var steps = new List<NewtonStep>();
+
+            do
+            {
+                x0 = x;
+                double fx0 = _function(x0);
+                fDerivative = (_function(x0 + h) - fx0) / h;
+
+                if (Math.Abs(fDerivative) < 1e-10)
+                {
+                    throw new InvalidOperationException("Числова похідна близька до нуля. Метод січних не збігається.");
+                }
+
+                x = x0 - fx0 / fDerivative;
+
+                iterations++;
+                precision = Math.Abs(x - x0);
+
+                steps.Add(new NewtonStep
+                {
+                    Iteration = iterations,
+                    XPrev = x0,
+                    FXPrev = fx0,
+                    DFxPrev = fDerivative,
+                    XCurr = x,
+                    Precision = precision
+                });
+
+            } while (precision > delta);
+
+            return new NewtonResult
+            {
+                Root = x,
+                FunctionValue = _function(x),
+                Iterations = iterations,
+                Precision = precision,
+                Steps = steps
+            };
+        }
+
+        public static ComplexNewtonResult SolveComplex(
+            Func<Complex, Complex> function,
+            Func<Complex, Complex> derivative,
+            Complex z0,
+            double epsilon,
+            int maxIterations = 100)
+        {
+            Complex z = z0;
+            int iterations = 0;
+            double precision;
+            var steps = new List<ComplexNewtonStep>();
+
+            do
+            {
+                iterations++;
+                Complex zPrev = z;
+
+                Complex fz = function(z);
+                Complex dfz = derivative(z);
+
+                z = z - fz / dfz;
+
+                precision = Complex.Abs(z - zPrev);
+
+                steps.Add(new ComplexNewtonStep
+                {
+                    Iteration = iterations,
+                    ZPrev = zPrev,
+                    ZCurr = z,
+                    Precision = precision
+                });
+
+            } while (precision > epsilon && iterations < maxIterations);
+
+            return new ComplexNewtonResult
+            {
+                Root = z,
+                Iterations = iterations,
+                Steps = steps
+            };
+        }
     }
 
-    public static (Complex Root, int Iterations) SolveComplex(
-        Func<Complex, Complex> function,
-        Func<Complex, Complex> derivative,
-        Complex z0,
-        double epsilon,
-        int maxIterations = 100)
+    public class NewtonResult
     {
-        Complex z = z0;
-        int iterations = 0;
-        double precision;
-
-        do
-        {
-            iterations++;
-            Complex zPrev = z;
-
-            Complex fz = function(z);
-            Complex dfz = derivative(z);
-
-            z = z - fz / dfz;
-
-            precision = Complex.Abs(z - zPrev);
-        } while (precision > epsilon && iterations < maxIterations);
-
-        return (z, iterations);
+        public double Root { get; set; }
+        public double FunctionValue { get; set; }
+        public int Iterations { get; set; }
+        public double Precision { get; set; }
+        public List<NewtonStep> Steps { get; set; } = new List<NewtonStep>();
     }
-}
-public class NewtonResult
-{
-    public double Root { get; set; }
-    public double FunctionValue { get; set; }
-    public int Iterations { get; set; }
-    public double Precision { get; set; }
-}
 }
