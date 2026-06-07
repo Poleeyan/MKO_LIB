@@ -19,7 +19,6 @@ namespace MKO_LIB
             output.AppendLine($"\nІнтервал для дійсного кореня f({a}) = {f(a):F5}, f({b}) = {f(b):F5} : [{a}, {b}]");
             output.AppendLine($"Задана похибка: {epsilon}");
 
-            // 1. Метод половинного ділення
             output.AppendLine("\n--- Метод половинного ділення ---");
             try
             {
@@ -44,7 +43,6 @@ namespace MKO_LIB
                 output.AppendLine($"Помилка: {ex.Message}");
             }
 
-            // 2. Метод хорд
             output.AppendLine("\n--- Метод хорд ---");
             try
             {
@@ -69,7 +67,6 @@ namespace MKO_LIB
                 output.AppendLine($"Помилка: {ex.Message}");
             }
 
-            // 3. Метод дотичних (Ньютона)
             output.AppendLine("\n--- Метод дотичних (Ньютона) ---");
             try
             {
@@ -95,7 +92,6 @@ namespace MKO_LIB
                 output.AppendLine($"Помилка: {ex.Message}");
             }
 
-            // 4. Комплексні корені
             output.AppendLine("\n--- Комплексні корені (модифікований Метод Ньютона) ---");
             
             Func<Complex, Complex> fc = CourseworkEquations.Fc;

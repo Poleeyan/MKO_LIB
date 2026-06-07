@@ -24,7 +24,6 @@ namespace MKO_LIB
 
         public BisectionResult Solve(double a, double b, double delta)
         {
-            // Перевірка коректності вхідних даних
             if (_function(a) * _function(b) > 0)
             {
                 throw new ArgumentException("f(a) та f(b) повинні мати різні знаки!");
@@ -36,7 +35,6 @@ namespace MKO_LIB
 
             do
             {
-                // Крок 2: c = (a+b) / 2
                 c = (a + b) / 2;
                 iterations++;
                 double fc = _function(c);
@@ -51,7 +49,6 @@ namespace MKO_LIB
                     Precision = Math.Abs(b - a)
                 });
 
-                // Крок 3: f(a)*f(c) > 0? якщо так: a=c, якщо ні: b=c
                 if (_function(a) * fc > 0)
                 {
                     a = c;
@@ -61,7 +58,6 @@ namespace MKO_LIB
                     b = c;
                 }
 
-                // Крок 4: |b-a| >= delta? якщо так: повернення до 2, якщо ні: вивід c
             } while (Math.Abs(b - a) >= delta);
 
             return new BisectionResult
