@@ -373,6 +373,54 @@ def add_formula(doc, formula_text, formula_number=None):
     return p
 
 
+def add_image(doc, img_name, number, caption, width_cm=12.0):
+    """Додати зображення по центру та підпис до нього за ДСТУ"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    img_path = os.path.join(script_dir, img_name)
+    
+    if os.path.exists(img_path):
+        p = doc.add_paragraph()
+        p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.first_line_indent = Cm(0)
+        p.paragraph_format.space_before = Pt(6)
+        p.paragraph_format.space_after = Pt(6)
+        run = p.add_run()
+        run.add_picture(img_path, width=Cm(width_cm))
+        
+        # Підпис рисунка: "Рисунок 2.1 – Блок-схема..."
+        caption_p = doc.add_paragraph()
+        caption_p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        caption_p.paragraph_format.first_line_indent = Cm(0)
+        caption_p.paragraph_format.space_before = Pt(3)
+        caption_p.paragraph_format.space_after = Pt(6)
+        caption_p.paragraph_format.keep_with_next = True
+        
+        run_cap = caption_p.add_run(f"Рисунок {number} – {caption}")
+        run_cap.font.name = "Times New Roman"
+        run_cap.font.size = Pt(14)
+        
+        # Забезпечуємо кириличний шрифт
+        r_elem = run_cap._element
+        rPr = r_elem.get_or_add_rPr()
+        rFonts = rPr.find(qn('w:rFonts'))
+        if rFonts is None:
+            rFonts = parse_xml(f'<w:rFonts {nsdecls("w")} w:cs="Times New Roman" w:eastAsia="Times New Roman"/>')
+            rPr.insert(0, rFonts)
+        else:
+            rFonts.set(qn('w:cs'), "Times New Roman")
+            rFonts.set(qn('w:eastAsia'), "Times New Roman")
+    else:
+        p = doc.add_paragraph()
+        p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.first_line_indent = Cm(0)
+        p.paragraph_format.space_before = Pt(6)
+        p.paragraph_format.space_after = Pt(6)
+        run = p.add_run(f"[Рисунок {number} – {caption} ({img_name} не знайдено)]")
+        run.font.name = "Times New Roman"
+        run.font.size = Pt(14)
+        run.font.italic = True
+
+
 def add_page_numbers(doc):
     """Додати нумерацію сторінок праворуч у верхньому куті (згідно з ДСТУ)"""
     section = doc.sections[0]
@@ -890,10 +938,10 @@ def generate_report():
         "площину. Ітераційна формула має той самий вигляд (1.4) [7, 8]:",
         alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
 
-    add_formula(doc, "zₙ₊₁ = zₙ − f(zₙ) / f'(zₙ)", "1.4")
+    add_formula(doc, "xₙ₊₁ = xₙ − f(xₙ) / f'(xₙ)", "1.4")
 
     add_paragraph(doc,
-        "де zₙ — комплексне число. Обираючи різні початкові наближення z₀ з комплексної площини, "
+        "де xₙ — комплексне число. Обираючи різні початкові наближення x₀ з комплексної площини, "
         "можна знайти всі корені полінома. Поліном 5-го степеня, згідно з основною теоремою алгебри, "
         "має рівно 5 коренів (з урахуванням кратності), серед яких один дійсний та чотири комплексні "
         "(попарно спряжені) [9].",
@@ -923,6 +971,7 @@ def generate_report():
     for step in algo_bisect:
         add_paragraph(doc, step, first_indent=1.25, space_after=0,
                       alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
+    add_image(doc, "BisectionMethod.png", "2.1", "Блок-схема алгоритму методу половинного ділення", width_cm=11.0)
 
     add_heading_h2(doc, "2.2 Алгоритм методу хорд")
 
@@ -937,6 +986,7 @@ def generate_report():
     for step in algo_chord:
         add_paragraph(doc, step, first_indent=1.25, space_after=0,
                       alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
+    add_image(doc, "ChordMethod.png", "2.2", "Блок-схема алгоритму методу хорд", width_cm=11.0)
 
     add_heading_h2(doc, "2.3 Алгоритм методу дотичних (Ньютона)")
 
@@ -950,19 +1000,21 @@ def generate_report():
     for step in algo_newton:
         add_paragraph(doc, step, first_indent=1.25, space_after=0,
                       alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
+    add_image(doc, "NewtonMethod1.png", "2.3", "Блок-схема алгоритму методу дотичних (Ньютона)", width_cm=10.0)
 
     add_heading_h2(doc, "2.4 Алгоритм методу Ньютона для комплексних коренів")
 
     algo_complex = [
-        "Крок 1. Задати початкове наближення z₀ ∈ ℂ та точність ε.",
-        "Крок 2. Обчислити f(zₙ) та f'(zₙ) у комплексній площині.",
-        "Крок 3. Обчислити zₙ₊₁ = zₙ − f(zₙ) / f'(zₙ).",
-        "Крок 4. Якщо |zₙ₊₁ − zₙ| ≤ ε, то zₙ₊₁ — наближений корінь (завершення).",
-        "Крок 5. Присвоїти zₙ = zₙ₊₁, перейти до кроку 2."
+        "Крок 1. Задати початкове наближення x₀ ∈ ℂ та точність ε.",
+        "Крок 2. Обчислити f(xₙ) та f'(xₙ) у комплексній площині.",
+        "Крок 3. Обчислити xₙ₊₁ = xₙ − f(xₙ) / f'(xₙ).",
+        "Крок 4. Якщо |xₙ₊₁ − xₙ| ≤ ε, то xₙ₊₁ — наближений корінь (завершення).",
+        "Крок 5. Присвоїти xₙ = xₙ₊₁, перейти до кроку 2."
     ]
     for step in algo_complex:
         add_paragraph(doc, step, first_indent=1.25, space_after=0,
                       alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
+    add_image(doc, "ComplexNewtonMethod.png", "2.4", "Блок-схема алгоритму методу Ньютона для комплексних коренів", width_cm=10.0)
 
     # ══════════════════════════════════════════
     #  3 РОЗРОБКА ПРОГРАМНОГО ЗАБЕЗПЕЧЕННЯ
@@ -1200,10 +1252,10 @@ def generate_report():
 
     for idx, (z0, root_z, iters_z, steps_z) in enumerate(complex_results, 1):
         add_paragraph(doc,
-            f"Комплексний корінь {idx} (початкове наближення z₀ = {format_complex(z0)}).",
+            f"Комплексний корінь {idx} (початкове наближення x₀ = {format_complex(z0)}).",
             bold=True, first_indent=1.25, space_before=6, space_after=3)
 
-        headers_z = ["Крок", "z_{k-1}", "z_k", "Похибка"]
+        headers_z = ["Крок", "x_{k-1}", "x_k", "Похибка"]
         rows_z = []
         for s in steps_z:
             rows_z.append([
@@ -1218,7 +1270,7 @@ def generate_report():
                             col_widths=[1.5, 5.0, 5.0, 2.5])
 
         add_paragraph(doc,
-            f"Результат: z* = {format_complex(root_z)}, кількість кроків: {iters_z}.",
+            f"Результат: x* = {format_complex(root_z)}, кількість кроків: {iters_z}.",
             first_indent=1.25, space_before=3, space_after=6)
 
     # ══════════════════════════════════════════
@@ -1267,7 +1319,7 @@ def generate_report():
         alignment=WD_ALIGN_PARAGRAPH.JUSTIFY)
 
     # Зведена таблиця комплексних
-    summary_complex_headers = ["№", "Корінь z*", "Кроків"]
+    summary_complex_headers = ["№", "Корінь x*", "Кроків"]
     summary_complex_rows = []
     for idx, (z0, root_z, iters_z, _) in enumerate(complex_results, 1):
         summary_complex_rows.append([
