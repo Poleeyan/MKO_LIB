@@ -1,0 +1,6 @@
+# Необхідне середовище (System Requirements):
+# - Python >= 3.10 (тестовано на 3.11) https://www.python.org/
+# - .NET SDK >= 10.0 (Windows runtime) https://dotnet.microsoft.com/
+
+python-docx>=1.2.0
+
