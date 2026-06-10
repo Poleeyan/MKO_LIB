@@ -194,6 +194,7 @@ def set_paragraph_format(paragraph, font_name="Times New Roman", font_size=14,
         run.font.size = Pt(font_size)
         run.font.bold = bold
         run.font.italic = italic
+        run.font.color.rgb = RGBColor(0, 0, 0)
         # Для кирилиці — вказуємо eastAsia та cs шрифт
         r_elem = run._element
         rPr = r_elem.get_or_add_rPr()
@@ -227,7 +228,7 @@ def add_heading_h1(doc, text, numbered=True):
     Згідно з методичними вказівками: кожен розділ починається з нової сторінки."""
     # Розрив сторінки перед заголовком (крім першого)
     add_page_break(doc)
-    p = doc.add_paragraph()
+    p = doc.add_paragraph(style='Heading 1')
     run = p.add_run(text.upper())
     set_paragraph_format(
         p, font_size=14, bold=True,
@@ -241,7 +242,7 @@ def add_heading_h1(doc, text, numbered=True):
 
 def add_heading_h2(doc, text):
     """Додати заголовок 2 рівня (жирний, з абзацного відступу, з великої літери)"""
-    p = doc.add_paragraph()
+    p = doc.add_paragraph(style='Heading 2')
     run = p.add_run(text)
     set_paragraph_format(
         p, font_size=14, bold=True,
@@ -460,10 +461,54 @@ def format_complex(z):
 
 
 # ─────────────────────────────────────────────
+
+def extract_screenshots_from_existing_report(script_dir):
+    """
+    Автоматично витягує скриншоти роботи програми (image5.png - image11.png)
+    із наявного файлу Пояснювальна_записка_МКО.docx та зберігає їх локально.
+    """
+    docx_name = "Пояснювальна_записка_МКО.docx"
+    docx_path = os.path.join(script_dir, docx_name)
+    if not os.path.exists(docx_path):
+        print(f"Попередження: {docx_name} не знайдено, автоматичне витягування скриншотів неможливе.")
+        return False
+
+    import zipfile
+    image_mapping = {
+        'image5.png': 'Screenshot_Bisection.png',
+        'image6.png': 'Screenshot_Chord.png',
+        'image7.png': 'Screenshot_Newton.png',
+        'image8.png': 'Screenshot_Complex1.png',
+        'image9.png': 'Screenshot_Complex2.png',
+        'image10.png': 'Screenshot_Complex3.png',
+        'image11.png': 'Screenshot_Complex4.png',
+    }
+
+    try:
+        with zipfile.ZipFile(docx_path, 'r') as z:
+            extracted_count = 0
+            for zip_name in z.namelist():
+                if zip_name.startswith('word/media/'):
+                    base_name = os.path.basename(zip_name)
+                    if base_name in image_mapping:
+                        target_name = image_mapping[base_name]
+                        target_path = os.path.join(script_dir, target_name)
+                        with open(target_path, 'wb') as out_f:
+                            out_f.write(z.read(zip_name))
+                        extracted_count += 1
+            print(f"Успішно витягнуто {extracted_count} скриншотів із {docx_name}")
+            return True
+    except Exception as e:
+        print(f"Помилка при витягуванні скриншотів: {e}")
+        return False
+
 #  Основна функція генерації документа
 # ─────────────────────────────────────────────
 
 def generate_report():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    extract_screenshots_from_existing_report(script_dir)
+    
     doc = Document()
 
     # ── Налаштування сторінки (ДСТУ 3008:2015) ──
@@ -781,42 +826,47 @@ def generate_report():
     add_page_break(doc)
 
     # ══════════════════════════════════════════
-    #  ЗМІСТ (автоматично генерується в Word, тут — заглушка)
+    #  ЗМІСТ (динамічний за ДСТУ та шаблоном ВНТУ)
     # ══════════════════════════════════════════
 
-    add_paragraph(doc, "ЗМІСТ", font_size=14, bold=True,
-                  alignment=WD_ALIGN_PARAGRAPH.CENTER,
-                  first_indent=None, space_after=12)
+    p_zmist = doc.add_paragraph(style='Heading 1')
+    run_zmist = p_zmist.add_run("ЗМІСТ")
+    set_paragraph_format(
+        p_zmist, font_size=14, bold=True,
+        alignment=WD_ALIGN_PARAGRAPH.CENTER,
+        line_spacing=1.5, first_indent=None,
+        space_before=0, space_after=12,
+        keep_with_next=True
+    )
 
-    toc_entries = [
-        ("ВСТУП", False),
-        ("1 КОРОТКІ ТЕОРЕТИЧНІ ВІДОМОСТІ", False),
-        ("    1.1 Метод половинного ділення", True),
-        ("    1.2 Метод хорд", True),
-        ("    1.3 Метод дотичних (Ньютона)", True),
-        ("    1.4 Метод Ньютона для комплексних коренів", True),
-        ("2 АЛГОРИТМИ МЕТОДІВ", False),
-        ("    2.1 Алгоритм методу половинного ділення", True),
-        ("    2.2 Алгоритм методу хорд", True),
-        ("    2.3 Алгоритм методу дотичних (Ньютона)", True),
-        ("    2.4 Алгоритм методу Ньютона для комплексних коренів", True),
-        ("3 РОЗРОБКА ПРОГРАМНОГО ЗАБЕЗПЕЧЕННЯ", False),
-        ("    3.1 Вибір мови програмування", True),
-        ("    3.2 Вхідні/вихідні дані", True),
-        ("    3.3 Структура програми", True),
-        ("    3.4 Інструкція користувачеві", True),
-        ("4 ТЕСТУВАННЯ ПРОГРАМНОГО ЗАБЕЗПЕЧЕННЯ", False),
-        ("5 АНАЛІЗ ОТРИМАНИХ РЕЗУЛЬТАТІВ", False),
-        ("ВИСНОВКИ", False),
-        ("ПЕРЕЛІК ПОСИЛАНЬ", False),
-        ("ДОДАТКИ", False),
-        ("    Додаток А. Лістинг програми", True),
-    ]
-    for entry_text, is_sub in toc_entries:
-        p = add_paragraph(doc, entry_text,
-                          font_size=14, bold=(not is_sub),
-                          first_indent=None,
-                          space_after=0, line_spacing=1.5)
+    # Додаємо динамічний зміст (TOC)
+    p_toc = doc.add_paragraph()
+    set_paragraph_format(
+        p_toc, font_size=14, alignment=WD_ALIGN_PARAGRAPH.LEFT,
+        line_spacing=1.5, first_indent=None, space_after=6
+    )
+    
+    # Права межа при полях: 21.0 - 2.5 (ліве) - 1.0 (праве) = 17.5 см
+    from docx.enum.text import WD_TAB_ALIGNMENT, WD_TAB_LEADER
+    p_toc.paragraph_format.tab_stops.add_tab_stop(Cm(17.5), alignment=WD_TAB_ALIGNMENT.RIGHT, leader=WD_TAB_LEADER.DOTS)
+    
+    r_begin = p_toc.add_run()
+    r_begin._element.append(parse_xml(f'<w:fldChar {nsdecls("w")} w:fldCharType="begin"/>'))
+    
+    r_instr = p_toc.add_run()
+    r_instr._element.append(parse_xml(f'<w:instrText {nsdecls("w")} xml:space="preserve"> TOC \\o "1-3" \\h \\z \\u </w:instrText>'))
+    
+    r_sep = p_toc.add_run()
+    r_sep._element.append(parse_xml(f'<w:fldChar {nsdecls("w")} w:fldCharType="separate"/>'))
+    
+    r_placeholder = p_toc.add_run("Для оновлення змісту натисніть правою кнопкою миші та виберіть «Оновити поле» (або натисніть F9)")
+    r_placeholder.font.name = "Times New Roman"
+    r_placeholder.font.size = Pt(12)
+    r_placeholder.font.italic = True
+    r_placeholder.font.color.rgb = RGBColor(128, 128, 128)
+    
+    r_end = p_toc.add_run()
+    r_end._element.append(parse_xml(f'<w:fldChar {nsdecls("w")} w:fldCharType="end"/>'))
 
     # ══════════════════════════════════════════
     #  ВСТУП (з нової сторінки)
@@ -1429,15 +1479,23 @@ def generate_report():
     add_empty_paragraph(doc, 1)
 
     # Додаток А (згідно з метод. вказівками: зверху "Додаток А", нижче — заголовок)
-    add_paragraph(doc, "Додаток А", font_size=14, bold=True,
-                  alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
-                  space_after=0)
-    add_paragraph(doc, "(обов'язковий)", font_size=14,
-                  alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
-                  space_after=3)
-    add_paragraph(doc, "Лістинг програми", font_size=14, bold=True,
-                  alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
-                  space_after=12)
+    p_doda = doc.add_paragraph(style='Heading 1')
+    p_doda.add_run("Додаток А")
+    set_paragraph_format(p_doda, font_size=14, bold=True,
+                         alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
+                         space_after=0)
+    
+    p_doda_ob = doc.add_paragraph()
+    p_doda_ob.add_run("(обов'язковий)")
+    set_paragraph_format(p_doda_ob, font_size=14,
+                         alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
+                         space_after=3)
+    
+    p_doda_title = doc.add_paragraph(style='Heading 1')
+    p_doda_title.add_run("Лістинг програми")
+    set_paragraph_format(p_doda_title, font_size=14, bold=True,
+                         alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
+                         space_after=12)
 
     # Читаємо та додаємо файли вихідного коду
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -1465,6 +1523,39 @@ def generate_report():
         else:
             add_paragraph(doc, f"[Файл {src_path} не знайдено]",
                           font_size=12, italic=True, first_indent=None)
+
+    # ── Додаток Б ──
+    add_page_break(doc)
+    p_dodb = doc.add_paragraph(style='Heading 1')
+    p_dodb.add_run("Додаток Б")
+    set_paragraph_format(p_dodb, font_size=14, bold=True,
+                         alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
+                         space_after=0)
+    
+    p_dodb_ref = doc.add_paragraph()
+    p_dodb_ref.add_run("(довідковий)")
+    set_paragraph_format(p_dodb_ref, font_size=14,
+                         alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
+                         space_after=3)
+    
+    p_dodb_title = doc.add_paragraph(style='Heading 1')
+    p_dodb_title.add_run("Результати роботи програми")
+    set_paragraph_format(p_dodb_title, font_size=14, bold=True,
+                         alignment=WD_ALIGN_PARAGRAPH.CENTER, first_indent=None,
+                         space_after=12)
+
+    screenshots = [
+        ("Screenshot_Bisection.png", "Б.1", "Результати обчислень методом половинного ділення"),
+        ("Screenshot_Chord.png", "Б.2", "Результати обчислень методом хорд"),
+        ("Screenshot_Newton.png", "Б.3", "Результати обчислень методом дотичних (Ньютона)"),
+        ("Screenshot_Complex1.png", "Б.4", "Результати обчислень комплексного кореня 1"),
+        ("Screenshot_Complex2.png", "Б.5", "Результати обчислень комплексного кореня 2"),
+        ("Screenshot_Complex3.png", "Б.6", "Результати обчислень комплексного кореня 3"),
+        ("Screenshot_Complex4.png", "Б.7", "Результати обчислень комплексного кореня 4"),
+    ]
+
+    for img_file, num, desc in screenshots:
+        add_image(doc, img_file, num, desc, width_cm=14.0)
 
     # ── Збереження документа ──
     output_path = os.path.join(script_dir, OUTPUT_FILENAME)
